@@ -1,0 +1,98 @@
+<div class="tp-app">
+  <header class="tp-head">
+    <div>
+      <p class="tp-kicker">Simulated cell · PLC in the loop</p>
+      <h1>Tire curing press</h1>
+      <p class="tp-lede">A green tire goes in soft and comes out vulcanised. A small PLC program runs the whole cycle below: it reads limit switches and transmitters, switches valves and cylinders, and never moves on until the machine reports that the last move is done. Everything you see is one model, so the drawing, the lamps and the logged data always agree.</p>
+    </div>
+    <button class="tp-btn" data-act="theme" type="button">Dark</button>
+  </header>
+
+  <section class="tp-main">
+    <div class="tp-figcol">
+      <!--PLATE-->
+      <div class="tp-now" aria-live="polite">
+        <span class="tp-tag" data-now-phase>Ready</span>
+        <p data-now-text></p>
+      </div>
+      <div class="tp-card">
+        <div class="tp-card-head"><span>Anatomy</span><span data-part-name>13 assemblies · hover or pick one</span></div>
+        <div class="tp-parts" data-parts></div>
+        <p class="tp-part-note" data-part-note>Pick an assembly to light it in the drawing and read what it does.</p>
+      </div>
+    </div>
+
+    <aside class="tp-side">
+      <div class="tp-card">
+        <div class="tp-card-head"><span>Operator panel</span><span data-clock>00:00:00</span></div>
+        <div class="tp-status">
+          <span class="tp-stack"><i data-lamp-ui="R"></i><i data-lamp-ui="A"></i><i data-lamp-ui="G"></i></span>
+          <div><b data-state>—</b><small data-state-sub></small></div>
+        </div>
+        <div class="tp-buttons">
+          <button class="tp-btn" data-act="start" type="button">Start</button>
+          <button class="tp-btn" data-act="stop" type="button">Cycle stop</button>
+          <button class="tp-btn" data-act="reset" type="button">Reset</button>
+          <button class="tp-btn tp-danger" data-act="estop" type="button" aria-pressed="false">E-stop</button>
+        </div>
+        <div class="tp-field"><span>Mode</span><div class="tp-seg" data-seg="mode"><button type="button" data-v="auto">Auto</button><button type="button" data-v="single">Single cycle</button></div></div>
+        <div class="tp-field"><span>Cure clock</span><div class="tp-seg" data-seg="warp"><button type="button" data-v="1">1×</button><button type="button" data-v="10">10×</button><button type="button" data-v="30">30×</button><button type="button" data-v="60">60×</button></div></div>
+        <p class="tp-fine">Moves run in real time. Only the cure steps are fast-forwarded; the log keeps process time.</p>
+      </div>
+
+      <div class="tp-card">
+        <div class="tp-card-head"><span>Recipe</span><span>takes effect next cycle</span></div>
+        <div data-recipe></div>
+      </div>
+
+      <div class="tp-card">
+        <div class="tp-card-head"><span>Break something</span><span>see the PLC react</span></div>
+        <div class="tp-faults" data-faults></div>
+      </div>
+
+      <div class="tp-card">
+        <div class="tp-card-head"><span>Alarms</span><span data-alarm-count>none</span></div>
+        <ul class="tp-alarms" data-alarms><li class="tp-empty">No alarms.</li></ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="tp-row tp-row-3">
+    <div class="tp-card">
+      <div class="tp-card-head"><span>Sequence · 27 steps</span><span data-step-time></span></div>
+      <ol class="tp-steps" data-steps></ol>
+    </div>
+    <div class="tp-card">
+      <div class="tp-card-head"><span>Active step logic</span><span>scan 50 ms</span></div>
+      <div class="tp-logic" data-logic></div>
+      <div class="tp-card-head tp-sub"><span>Analog</span><span>AIW / AQW</span></div>
+      <table class="tp-io" data-analog></table>
+    </div>
+    <div class="tp-card">
+      <div class="tp-card-head"><span>Digital I/O</span><span>live</span></div>
+      <div class="tp-io-cols"><table class="tp-io" data-di></table><table class="tp-io" data-do></table></div>
+    </div>
+  </section>
+
+  <section class="tp-row tp-row-2">
+    <div class="tp-card">
+      <div class="tp-card-head"><span>Process data</span><span data-rows>0 rows</span></div>
+      <div class="tp-charts" data-charts></div>
+      <div class="tp-buttons tp-export">
+        <button class="tp-btn" data-act="csv" type="button">Download process CSV</button>
+        <button class="tp-btn" data-act="cycles" type="button">Download cycle CSV</button>
+        <button class="tp-btn" data-act="json" type="button">Download JSON</button>
+      </div>
+    </div>
+    <div class="tp-card">
+      <div class="tp-card-head"><span>Cycle records</span><span data-cycle-count>0 tires</span></div>
+      <div class="tp-table-wrap"><table class="tp-cycles"><thead><tr><th>#</th><th>Serial</th><th>Cycle</th><th>P max</th><th>Platen</th><th>Cure</th><th>Result</th></tr></thead><tbody data-cycles><tr><td colspan="7" class="tp-empty">The first record appears when a tire reaches the conveyor.</td></tr></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="tp-card tp-explain">
+    <div class="tp-card-head"><span>How the cycle works</span><span>six phases</span></div>
+    <div class="tp-phases" data-phases></div>
+    <p class="tp-fine">This is a teaching model, not a vendor's machine: pressures, temperatures, forces and times are representative of a passenger-tire press with steam and nitrogen cure, and the dynamics are first-order approximations with sensor noise. One drawing unit is about 9 mm.</p>
+  </section>
+</div>
