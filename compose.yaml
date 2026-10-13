@@ -1,0 +1,14 @@
+services:
+  tire-curing-press:
+    build: .
+    image: tire-curing-press:latest
+    ports:
+      - "${PORT:-8080}:8080"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
