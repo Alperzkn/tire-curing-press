@@ -1,6 +1,8 @@
 // Tire curing press: an isometric, PLC-driven figure built with the anatomy kit.
-// node build.mjs [--light]  ->  tire-curing-press.html (standalone)
-import { readFileSync, writeFileSync } from "node:fs";
+// node build.mjs [--dark] [--artifact]  ->  public/index.html (HMI fed from the IE Databus by server/server.mjs)
+//                                          tire-curing-press.html (standalone: runs the same model in the page)
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -11,6 +13,8 @@ const { tubePieces, tubeSvg } = await import(join(KIT, "kit/tube.mjs"));
 const { kitScript } = await import(join(KIT, "scripts/inline-kit.mjs"));
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+const MODEL_FILE = join(HERE, "sim/press-model.js");
+const MODEL = createRequire(import.meta.url)(MODEL_FILE);
 const theme = process.argv.includes("--dark") ? "dark" : "light";
 
 const WIDTH = 800;
@@ -21,13 +25,13 @@ const DECK = 64;
 const ROD_Y = 58;
 const ROD_R = 4.6;
 const GLAND_TOP = 72;
-const STROKE = 55; // press opening
+const STROKE = MODEL.GEOMETRY.STROKE; // press opening, shared with the plant model
 const PART = 92; // parting line
 const SEAT = 81; // tire bottom when seated in the mold, on the stand, on the conveyor
 const TIRE = { rIn: 19, rBead: 24, rOut: 37, h: 22, shoulder: 5 };
 const MOLD_R = 44;
 const CAVITY_R = 37.6;
-const CARRY = 23; // chuck lift
+const CARRY = MODEL.GEOMETRY.CARRY; // chuck lift, shared with the plant model
 const STAND_X = -150;
 const CONV_X = 150;
 const ARM_DX = -22; // arm line, relative to the chuck centre
@@ -542,6 +546,8 @@ const DATA = {
 const css = readFileSync(join(HERE, "app.css"), "utf8");
 const html = readFileSync(join(HERE, "app.html"), "utf8");
 const live = readFileSync(join(HERE, "live.js"), "utf8");
+// the model ships inside the page as a CommonJS module: step logic, tag names and the local fallback
+const model = `const TirePress = (() => {\nconst module = { exports: {} };\nconst exports = module.exports;\n${readFileSync(MODEL_FILE, "utf8")}\nreturn module.exports;\n})();\n`;
 const plate = k.plateHtml({
   fig: "Fig 1",
   title: "Tire curing press · TCP-01",
@@ -557,10 +563,14 @@ const plate = k.plateHtml({
     "The loader takes a green tire from the stand into the open press and the bladder inflates inside it. The beam closes and squeezes the mold, steam and then nitrogen press the rubber into the heated mold from inside until it is cured, and the unloader sets the finished tire on the conveyor. Every move waits for the limit switch or pressure the PLC is watching.",
   body: `<div class="tp-stage" tabindex="0" role="group" aria-label="Tire curing press. Use the controls beside the figure to run it; arrow keys step through its parts.">${svg}</div>`,
 });
-const page = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Tire curing press</title><style>${k.ISO_CSS}${css}</style></head><body class="iso tp" data-theme="${theme}">${html.replace("<!--PLATE-->", plate)}<script type="module">${(kitScript() + `\n{\nconst DATA = ${JSON.stringify(DATA)};\n` + live + "\n}").replace(/<\/(script)/gi, "<\\/$1")}</script></body></html>`;
-const file = "tire-curing-press.html";
-writeFileSync(join(HERE, file), page);
-console.log("wrote", file, Math.round(page.length / 1024) + " KB");
+const script = (data) => (kitScript() + "\n" + model + `{\nconst DATA = ${JSON.stringify(data)};\n` + live + "\n}").replace(/<\/(script)/gi, "<\\/$1");
+const pageFor = (mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Tire curing press</title><style>${k.ISO_CSS}${css}</style></head><body class="iso tp" data-theme="${theme}">${html.replace("<!--PLATE-->", plate)}<script type="module">${script({ ...DATA, mode })}</script></body></html>`;
+for (const [file, mode] of [["public/index.html", "databus"], ["tire-curing-press.html", "local"]]) {
+  mkdirSync(dirname(join(HERE, file)), { recursive: true });
+  const page = pageFor(mode);
+  writeFileSync(join(HERE, file), page);
+  console.log("wrote", file, `(${mode})`, Math.round(page.length / 1024) + " KB");
+}
 
 // Artifact variant: no document skeleton, tokens on :root following the viewer's theme, copy instead of download.
 if (process.argv.includes("--artifact")) {
@@ -573,8 +583,7 @@ if (process.argv.includes("--artifact")) {
   const dark = `${isoDark};${tpDark};color-scheme:dark`;
   const tokens = `:root{${isoDark};${tpDark};${isoLight};${tpLight};color-scheme:light}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){${dark}}}:root[data-theme="dark"]{${dark}}`;
   const bodyHtml = html.replace("<!--PLATE-->", plate).replace(/<button class="tp-btn" data-act="theme"[^>]*>[^<]*<\/button>/, "");
-  const script = (kitScript() + `\n{\nconst DATA = ${JSON.stringify({ ...DATA, artifact: true })};\n` + live + "\n}").replace(/<\/(script)/gi, "<\\/$1");
-  const artifact = `<title>Tire Curing Press</title>\n<style>${tokens}${isoRest}${cssRest}</style>\n<div class="iso tp">${bodyHtml}</div>\n<script type="module">${script}</script>`;
+  const artifact = `<title>Tire Curing Press</title>\n<style>${tokens}${isoRest}${cssRest}</style>\n<div class="iso tp">${bodyHtml}</div>\n<script type="module">${script({ ...DATA, mode: "local", artifact: true })}</script>`;
   writeFileSync(join(HERE, "artifact.html"), artifact);
   console.log("wrote artifact.html", Math.round(artifact.length / 1024) + " KB");
 }

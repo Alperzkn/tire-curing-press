@@ -263,15 +263,52 @@ h1{margin:0 0 8px;color:var(--anatomy-strong);font-size:26px;font-weight:600;let
 @media (max-width:1180px){.tp-main{grid-template-columns:1fr}.tp-side{grid-template-columns:repeat(2,minmax(0,1fr))}.tp-row-3,.tp-row-2{grid-template-columns:1fr}.tp-phases{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 0}.tp-phase:nth-child(4){padding-left:0;border-left:0}}
 @media (max-width:640px){.tp-app{margin-top:20px}.tp-head{flex-direction:column}.tp-side{grid-template-columns:1fr}.tp-phases{grid-template-columns:1fr 1fr}.tp-phase:nth-child(odd){padding-left:0;border-left:0}.tp-io-cols{grid-template-columns:1fr}.tp-export{grid-template-columns:1fr}.tp-now{grid-template-columns:1fr;gap:4px}.tp .iso-plate{padding:44px 6px 60px}.tp-logic-row{grid-template-columns:1fr;gap:3px}}
 @media (prefers-reduced-motion:reduce){.tp-flow{animation:none}}
+/* databus link, anomalies */
+.tp-head-side{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.tp-link{display:inline-flex;align-items:center;gap:8px;font-family:var(--anatomy-mono);font-size:10.5px;letter-spacing:.06em;color:var(--anatomy-text);box-shadow:inset 0 0 0 1px var(--anatomy-lo);padding:8px 11px;max-width:46ch;line-height:1.3}
+.tp-link i{flex:none;width:7px;height:7px;border-radius:50%;background:var(--tp-ok)}
+.tp-link[data-level="warn"] i{background:var(--tp-warn)}
+.tp-link[data-level="bad"] i{background:var(--tp-bad)}
+.tp-link[data-level="local"] i{background:var(--anatomy-muted)}
+.tp-truth{display:grid;gap:2px;padding:10px 12px;box-shadow:inset 2px 0 0 var(--anatomy-lo),inset 0 0 0 1px var(--tp-line);margin-bottom:10px}
+.tp-truth[data-active="true"]{box-shadow:inset 2px 0 0 var(--tp-bad),inset 0 0 0 1px var(--tp-line)}
+.tp-truth b{color:var(--anatomy-strong);font-size:13px;font-weight:500}
+.tp-truth[data-active="true"] b{color:var(--tp-bad)}
+.tp-truth span{font-family:var(--anatomy-mono);font-size:11px;color:var(--anatomy-text)}
+.tp-truth small{color:var(--anatomy-muted);font-size:12px;line-height:1.45}
+.tp-truth code{font-family:var(--anatomy-mono);font-size:10px;color:var(--anatomy-muted);overflow-wrap:anywhere}
+.tp-ai{display:grid;gap:1px;margin-bottom:12px;font-family:var(--anatomy-mono);font-size:11px}
+.tp-ai span{color:var(--anatomy-muted);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.tp-ai b{font-weight:400;color:var(--anatomy-text);overflow-wrap:anywhere}
+.tp-ai b[data-status="0"]{color:var(--tp-ok)}
+.tp-ai b[data-status="1"]{color:var(--tp-warn)}
+.tp-ai b[data-status="2"]{color:var(--tp-bad)}
+.tp-random{margin:0}
+.tp-anomaly{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.tp-anomaly .tp-field:first-of-type{margin-top:10px}
+.tp-inject{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px}
+.tp-inject select{min-width:0;appearance:none;border:0;border-radius:0;background:var(--anatomy-card);color:var(--anatomy-strong);box-shadow:inset 0 0 0 1px var(--anatomy-lo);padding:8px 10px;font:12px var(--anatomy-mono)}
+.tp-inject select:focus-visible,.tp-fault input:focus-visible,.tp-slider input:focus-visible{outline:1px solid var(--anatomy-strong);outline-offset:2px}
+.tp-pick-note{display:block;color:var(--anatomy-muted);font-size:12px;line-height:1.45;min-height:34px}
+.tp-fine code{font-family:var(--anatomy-mono);font-size:11px}
+.tp-write-note{color:var(--tp-bad)}
+.tp-cycles td.tp-anom{color:var(--anatomy-muted);white-space:normal}
+@media (max-width:640px){.tp-anomaly{grid-template-columns:1fr;gap:12px}.tp-link{max-width:100%}.tp-head-side{justify-content:flex-start}}
+.tp-btn:disabled,.tp-seg button:disabled,.tp-inject select:disabled{opacity:.4;cursor:not-allowed}
+.tp-btn:disabled:hover{background:transparent}
+.tp-slider input:disabled,.tp-fault input:disabled{opacity:.5;cursor:not-allowed}
 .tp-copy{display:block;width:100%;height:120px;margin-top:10px;background:var(--anatomy-card);color:var(--anatomy-text);border:1px solid var(--anatomy-lo);font:10.5px/1.4 var(--anatomy-mono);padding:8px}
 </style></head><body class="iso tp" data-theme="light"><div class="tp-app">
   <header class="tp-head">
     <div>
       <p class="tp-kicker">Simulated cell · PLC in the loop</p>
       <h1>Tire curing press</h1>
-      <p class="tp-lede">A green tire goes in soft and comes out vulcanised. A small PLC program runs the whole cycle below: it reads limit switches and transmitters, switches valves and cylinders, and never moves on until the machine reports that the last move is done. Everything you see is one model, so the drawing, the lamps and the logged data always agree.</p>
+      <p class="tp-lede">A green tire goes in soft and comes out vulcanised. A small PLC program runs the whole cycle below: it reads limit switches and transmitters, switches valves and cylinders, and never moves on until the machine reports that the last move is done. <span data-source-note></span></p>
     </div>
-    <button class="tp-btn" data-act="theme" type="button">Dark</button>
+    <div class="tp-head-side">
+      <span class="tp-link" data-link data-level="warn"><i aria-hidden="true"></i><span>Connecting</span></span>
+      <button class="tp-btn" data-act="theme" type="button">Dark</button>
+    </div>
   </header>
 
   <section class="tp-main">
@@ -285,6 +322,21 @@ h1{margin:0 0 8px;color:var(--anatomy-strong);font-size:26px;font-weight:600;let
         <div class="tp-card-head"><span>Anatomy</span><span data-part-name>13 assemblies · hover or pick one</span></div>
         <div class="tp-parts" data-parts></div>
         <p class="tp-part-note" data-part-note>Pick an assembly to light it in the drawing and read what it does.</p>
+      </div>
+      <div class="tp-card">
+        <div class="tp-card-head"><span>Anomalies · ground truth</span><span data-anomaly-count>–</span></div>
+        <div class="tp-anomaly">
+          <div>
+            <div class="tp-truth" data-truth data-active="false"><b>No data yet</b></div>
+            <div class="tp-ai" data-ai></div>
+            <p class="tp-fine">The <code>Anomaly_0</code> tags say what was injected and when. Keep them out of detector inputs and score detections against them.</p>
+          </div>
+          <div>
+            <label class="tp-fault tp-random"><input type="checkbox" data-anomaly-random><span><b>Inject random anomalies</b><small>One at a time, two to seven minutes each, a random type and severity.</small></span></label>
+            <div class="tp-field"><span>Mean gap between anomalies</span><div class="tp-seg" data-seg="gap"><button type="button" data-v="2">2 min</button><button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="30">30</button><button type="button" data-v="60">60</button></div></div>
+            <div class="tp-field"><span>Inject one now</span><div class="tp-inject"><select data-anomaly-pick aria-label="Anomaly type"></select><button class="tp-btn" data-act="inject" type="button">Inject</button><button class="tp-btn" data-act="clear-anomaly" type="button">End</button></div><small class="tp-pick-note" data-anomaly-text></small></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -301,9 +353,10 @@ h1{margin:0 0 8px;color:var(--anatomy-strong);font-size:26px;font-weight:600;let
           <button class="tp-btn" data-act="reset" type="button">Reset</button>
           <button class="tp-btn tp-danger" data-act="estop" type="button" aria-pressed="false">E-stop</button>
         </div>
-        <div class="tp-field"><span>Mode</span><div class="tp-seg" data-seg="mode"><button type="button" data-v="auto">Auto</button><button type="button" data-v="single">Single cycle</button></div></div>
+        <div class="tp-field"><span>Mode</span><div class="tp-seg" data-seg="mode"><button type="button" data-v="0">Auto</button><button type="button" data-v="1">Single cycle</button></div></div>
         <div class="tp-field"><span>Cure clock</span><div class="tp-seg" data-seg="warp"><button type="button" data-v="1">1×</button><button type="button" data-v="10">10×</button><button type="button" data-v="30">30×</button><button type="button" data-v="60">60×</button></div></div>
-        <p class="tp-fine">Moves run in real time. Only the cure steps are fast-forwarded; the log keeps process time.</p>
+        <p class="tp-fine">Moves run in real time. Only the cure steps are fast-forwarded; the log keeps process time. Buttons write command tags; the simulation reads them on its next scan.</p>
+        <p class="tp-fine tp-write-note" data-write-note role="status" hidden></p>
       </div>
 
       <div class="tp-card">
@@ -352,14 +405,14 @@ h1{margin:0 0 8px;color:var(--anatomy-strong);font-size:26px;font-weight:600;let
     </div>
     <div class="tp-card">
       <div class="tp-card-head"><span>Cycle records</span><span data-cycle-count>0 tires</span></div>
-      <div class="tp-table-wrap"><table class="tp-cycles"><thead><tr><th>#</th><th>Serial</th><th>Cycle</th><th>P max</th><th>Platen</th><th>Cure</th><th>Result</th></tr></thead><tbody data-cycles><tr><td colspan="7" class="tp-empty">The first record appears when a tire reaches the conveyor.</td></tr></tbody></table></div>
+      <div class="tp-table-wrap"><table class="tp-cycles"><thead><tr><th>#</th><th>Serial</th><th>Cycle</th><th>P max</th><th>Platen</th><th>Cure</th><th>Result</th><th>Anomaly</th></tr></thead><tbody data-cycles><tr><td colspan="8" class="tp-empty">The first record appears when a tire reaches the conveyor.</td></tr></tbody></table></div>
     </div>
   </section>
 
   <section class="tp-card tp-explain">
     <div class="tp-card-head"><span>How the cycle works</span><span>six phases</span></div>
     <div class="tp-phases" data-phases></div>
-    <p class="tp-fine">This is a teaching model, not a vendor's machine: pressures, temperatures, forces and times are representative of a passenger-tire press with steam and nitrogen cure, and the dynamics are first-order approximations with sensor noise. One drawing unit is about 9 mm.</p>
+    <p class="tp-fine">This is a teaching model, not a vendor's machine: pressures, temperatures, forces and times are representative of a passenger-tire press with steam and nitrogen cure, and the dynamics are first-order approximations with sensor noise. Injected anomalies act on the plant or a sensor inside the model, never on a published value, so their signatures travel through the PLC the way real ones would. Shaded bands in the charts mark when one was active. One drawing unit is about 9 mm.</p>
   </section>
 </div>
 <script type="module">const AZIMUTH = 45;
@@ -1037,25 +1090,37 @@ const ISO_CSS = `
 @media (prefers-reduced-motion:reduce){.iso-line[data-flow],.iso-dots circle[data-pulse]{animation:none}}
 `;
 
-{
-const DATA = {"P":{"origin":[386.09851696268146,376.1943211408599],"scale":1.2607033813838513,"azimuth":52,"elevation":30},"SEAT":81,"PART":92,"STROKE":55,"CARRY":23,"STAND_X":-150,"CONV_X":150,"TIRE":{"rIn":19,"rBead":24,"rOut":37,"h":22,"shoulder":5},"CAVITY_R":37.6,"fingers":[0.5235987755982988,1.5707963267948966,2.617993877991494,3.665191429188092,4.71238898038469,5.759586531581288],"valves":["TCV","SHAPE","STEAM","N2","EXH","VAC"]};
-// Tire curing press: plant model, PLC program, drawing and data panels.
-// The PLC reads only inputs and writes only outputs; the plant reads only outputs.
-const P = DATA.P;
-const { SEAT, STROKE, CARRY, STAND_X, CONV_X, TIRE } = DATA;
-const $ = (selector, root = document) => root.querySelector(selector);
-const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-const partEl = (name) => $(`[data-part="${name}"]`);
-const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
-const sat = (value) => clamp(value, 0, 1);
-const noise = (amount) => (Math.random() + Math.random() + Math.random() - 1.5) * amount;
-const still = matchMedia("(prefers-reduced-motion: reduce)");
-const POST_UP = 22;
-const SCAN = 0.05;
-const KN_PER_BAR = 7.14; // two squeeze cylinders, 714 cm2 together
-const MM = 9; // one drawing unit
+const TirePress = (() => {
+const module = { exports: {} };
+const exports = module.exports;
+// Tire curing press TCP-01: plant model, PLC program, random anomalies and the SIMATIC v1 tag interface.
+// One source, three hosts: the Flow Creator function node that runs the simulation on Industrial Edge,
+// the HMI page (step logic, tag names, local fallback) and the tests. No DOM, no imports; state is plain JSON
+// so it can live in flow context.
+"use strict";
 
-// ---- tags ----------------------------------------------------------------------------
+const VERSION = "2.0.0";
+const CONFIG = {
+  applicationName: "Tire Curing Press TCP-01 Simulation",
+  namespace: "TCP01",
+  connector: "tirepress1", // ie/d/j/simatic/v1/<connector>/dp/r/<connection>/<chunk>
+  connection: "factory",
+  publishEveryMs: 500,
+  scanS: 0.05,
+  maxCatchupS: 30, // longer runtime gaps are recorded, not fabricated
+};
+function configure(overrides) {
+  for (const key of Object.keys(overrides || {})) if (overrides[key] !== undefined && key in CONFIG) CONFIG[key] = overrides[key];
+  return CONFIG;
+}
+
+// ---- geometry and units ------------------------------------------------------------------
+const GEOMETRY = { STROKE: 55, CARRY: 23, POST_UP: 22 }; // drawing units
+const MM = 9; // one drawing unit is about 9 mm
+const KN_PER_BAR = 7.14; // two squeeze cylinders, 714 cm2 together
+const { STROKE, CARRY, POST_UP } = GEOMETRY;
+
+// ---- I/O -----------------------------------------------------------------------------------
 const DI = [
   ["I0.0", "ESTOP_OK", "Emergency stop chain healthy"], ["I0.1", "GUARD_OK", "Guard door closed"], ["I0.2", "PB_START", "Start push button"],
   ["I0.3", "PB_STOP", "Cycle stop push button"], ["I0.4", "PB_RESET", "Reset push button"], ["I0.5", "PRESS_OPEN", "Beam at top limit"],
@@ -1077,119 +1142,38 @@ const DO = [
 const AI = [
   ["AI0", "TT_TOP", "Top platen temperature", "°C", 1], ["AI1", "TT_BOT", "Bottom platen temperature", "°C", 1], ["AI2", "PT_BLAD", "Bladder pressure", "bar", 2],
   ["AI3", "TT_BLAD", "Bladder medium temperature", "°C", 1], ["AI4", "PT_HYD", "Squeeze pressure", "bar", 0], ["AI5", "ZT_PRESS", "Press opening", "mm", 0],
+  ["AI6", "IT_LDR", "Loader travel drive current", "A", 2], ["AI7", "IT_UNL", "Unloader travel drive current", "A", 2],
 ];
 const AO = [["AO0", "TCV_PLATEN", "Platen steam valve", "%", 0], ["AO1", "PCV_SQZ", "Squeeze pressure setpoint", "bar", 0]];
 
-const recipeDefs = [
-  ["platenSP", "Platen temperature", 150, 190, 1, "°C"], ["steamT", "Steam time", 60, 240, 10, "s"], ["n2T", "Nitrogen time", 180, 720, 30, "s"],
-  ["n2P", "Nitrogen pressure", 16, 26, 0.5, "bar"], ["squeezeSP", "Squeeze force", 1000, 1500, 50, "kN"],
+// ---- recipe, manual faults, random anomalies -------------------------------------------------
+const RECIPE = [
+  ["platenSP", "PlatenSP", "Platen temperature", 150, 190, 1, "°C"], ["steamT", "SteamT", "Steam time", 60, 240, 10, "s"],
+  ["n2T", "N2T", "Nitrogen time", 180, 720, 30, "s"], ["n2P", "N2P", "Nitrogen pressure", 16, 26, 0.5, "bar"],
+  ["squeezeSP", "SqueezeSP", "Squeeze force", 1000, 1500, 50, "kN"],
 ];
 const NOMINAL = { platenSP: 175, steamT: 120, n2T: 420, n2P: 21, squeezeSP: 1400, shapeSP: 0.5 };
-const ui = { mode: "auto", warp: 30, recipe: { ...NOMINAL }, faults: { leak: false, sag: false, grip: false, guard: false }, estop: false, pulse: {} };
-const faultDefs = [
-  ["leak", "Bladder leak", "Pressure cannot reach setpoint: low-pressure alarm, tire rejected."],
-  ["sag", "Steam supply sag", "Header drops to 9 bar: the steam step runs cold and slow."],
-  ["grip", "Loader pressure switch fails", "LDR_GRIPPED never comes: the step watchdog stops the sequence."],
-  ["guard", "Open the guard door", "Motion outputs drop at once; an active cure keeps running."],
+const FAULTS = [
+  ["leak", "Leak", "Bladder leak", "Pressure cannot reach setpoint: low-pressure alarm, tire rejected."],
+  ["sag", "Sag", "Steam supply sag", "Header drops to 9 bar: the steam step runs cold and slow."],
+  ["grip", "Grip", "Loader pressure switch fails", "LDR_GRIPPED never comes: the step watchdog stops the sequence."],
+  ["guard", "Guard", "Open the guard door", "Motion outputs drop at once; an active cure keeps running."],
 ];
+// Each anomaly acts on the plant or a sensor, never on a published value directly, so its signature
+// propagates through the PLC and the process the way a real one would.
+const ANOMALIES = [
+  { code: 1, kind: "bladder_leak", label: "Bladder leak", text: "A slow leak in the bladder: cure pressure settles below setpoint in the nitrogen step." },
+  { code: 2, kind: "steam_supply_sag", label: "Steam supply sag", text: "Header pressure drops: cure steam runs low and the platen valve opens further to hold temperature." },
+  { code: 3, kind: "platen_steam_trap", label: "Bottom platen steam trap blocked", text: "Condensate backs up in the bottom platen: TT_BOT falls, the loop opens the valve and the top platen runs hot." },
+  { code: 4, kind: "hydraulic_leak", label: "Hydraulic leak", text: "Squeeze pressure builds slowly and settles below its setpoint." },
+  { code: 5, kind: "platen_sensor_drift", label: "Top platen sensor drift", text: "TT_TOP drifts high; the loop trusts it and cools the real platens, so tires under-cure." },
+  { code: 6, kind: "pressure_sensor_noise", label: "Bladder transmitter noise", text: "PT_BLAD turns noisy with spikes while the real pressure is fine; spikes can fake alarms." },
+  { code: 7, kind: "loader_drive_friction", label: "Loader drive friction", text: "The loader carriage drags: slower travel, longer load steps and higher drive current." },
+  { code: 8, kind: "nitrogen_supply_low", label: "Nitrogen supply low", text: "The nitrogen header cannot reach recipe pressure during the cure." },
+];
+const ANOMALY = { minDurationS: 120, maxDurationS: 420, firstAfterS: [120, 300], minGapS: 60, rampS: 60, severity: [0.35, 1] };
 
-// ---- plant -----------------------------------------------------------------------------
-const axis = (p) => ({ p, v: 0 });
-const plant = {
-  lift: axis(STROKE), force: 0,
-  ldr: { x: axis(0), z: axis(0), grip: 0 }, // x: 0 at the stand .. 150 at the press
-  unl: { x: axis(0), z: axis(0), grip: 0 }, // x: 0 at the conveyor .. 150 at the press
-  post: axis(0), pBlad: 0, tBlad: 60, tTop: 174.6, tBot: 175.2, tTire: 28, cure: 0,
-  stand: { present: true, timer: 0 },
-  work: { where: "none", cured: false },
-  out: { present: false, x: 0, alpha: 0 },
-  bladder: { r: 12, h: 16 },
-};
-function drive(a, dir, low, high, speed, dt) {
-  const room = dir > 0 ? high - a.p : dir < 0 ? a.p - low : 0;
-  const want = dir * Math.min(speed, room * 7 + speed * 0.05);
-  a.v += (want - a.v) * (1 - Math.exp(-dt / 0.07));
-  a.p += a.v * dt;
-  if (a.p <= low) { a.p = low; if (a.v < 0) a.v = 0; }
-  if (a.p >= high) { a.p = high; if (a.v > 0) a.v = 0; }
-}
-const tSat = (gauge) => 100 * Math.pow(Math.max(0.05, gauge + 1.013), 0.25);
-const lag = (value, target, dt, tau) => value + (target - value) * (1 - Math.exp(-dt / tau));
-const cureRate = (t) => Math.pow(2, (t - 160) / 10);
-
-function thermal(s, Q, tcv, sag, dt) {
-  const closed = s.lift.p < 0.5;
-  const supply = sag ? 178 : 195;
-  for (const key of ["tTop", "tBot"]) {
-    const loss = key === "tTop" && !closed ? 1.9 : 1;
-    const load = closed && s.work.where === "mold" ? (s[key] - s.tTire) / 2600 : 0;
-    s[key] += ((tcv * (supply - s[key])) / 70 - (loss * (s[key] - 25)) / 1500 - load) * dt;
-  }
-  if (Q.V_STEAM) s.tBlad = lag(s.tBlad, tSat(s.pBlad), dt, 8);
-  else if (Q.V_N2) s.tBlad = lag(s.tBlad, 150, dt, 520);
-  else if (Q.V_SHAPE) s.tBlad = lag(s.tBlad, 105, dt, 6);
-  else s.tBlad = lag(s.tBlad, closed ? 120 : 60, dt, 25);
-  if (s.work.where === "mold" && closed) {
-    s.tTire = lag(s.tTire, 0.25 * (s.tTop + s.tBot) + 0.5 * s.tBlad, dt, 150);
-    s.cure += cureRate(s.tTire) * dt;
-  }
-}
-function pressure(s, Q, r, faults, dt) {
-  const steam = faults.sag ? 9 : 14;
-  if (Q.V_VAC) s.pBlad = lag(s.pBlad, -0.6, dt, 1.4);
-  else if (Q.V_EXH) s.pBlad = lag(s.pBlad, 0, dt, 2.6);
-  else if (Q.V_N2) s.pBlad = lag(s.pBlad, Math.max(r.n2P, s.pBlad), dt, 4);
-  else if (Q.V_STEAM) s.pBlad = lag(s.pBlad, steam, dt, 5);
-  else if (Q.V_SHAPE) s.pBlad = lag(s.pBlad, r.shapeSP, dt, 0.9);
-  else s.pBlad = lag(s.pBlad, 0, dt, 12);
-  if (faults.leak && s.pBlad > 0) s.pBlad -= (s.pBlad / 12) * dt;
-}
-function plantStep(dt, Q, AQ) {
-  const s = plant;
-  const en = Q.MOTION_EN; // with the enable valve shut every axis stays where it is
-  drive(s.lift, en && Q.HYD_PUMP ? (Q.PRESS_UP ? 1 : Q.PRESS_DN ? -1 : 0) : 0, 0, STROKE, 17, dt);
-  const closed = s.lift.p < 0.2;
-  s.force = lag(s.force, closed && Q.SQUEEZE ? AQ.PCV_SQZ * KN_PER_BAR : 0, dt, closed ? 0.55 : 0.2);
-  for (const [unit, fwd, rev, lower, grip] of [[s.ldr, Q.LDR_FWD, Q.LDR_REV, Q.LDR_LOWER, Q.LDR_GRIP], [s.unl, Q.UNL_FWD, Q.UNL_REV, Q.UNL_LOWER, Q.UNL_GRIP]]) {
-    drive(unit.x, en ? (fwd ? 1 : rev ? -1 : 0) : 0, 0, 150, 58, dt);
-    drive(unit.z, en ? (lower ? 1 : -1) : 0, 0, CARRY, 24, dt);
-    if (en) unit.grip = clamp(unit.grip + (grip ? 1 : -1) * dt * 3.2, 0, 1);
-  }
-  drive(s.post, en ? (Q.POST_UP ? 1 : -1) : 0, 0, POST_UP, 15, dt);
-  // the tire changes hands
-  const down = (u) => u.z.p > CARRY - 0.3;
-  if (s.work.where === "none" && s.stand.present && s.ldr.grip > 0.9 && down(s.ldr) && s.ldr.x.p < 0.3) { s.work = { where: "ldr", cured: false }; s.stand.present = false; s.stand.timer = 5; s.tTire = 28 + noise(2); s.cure = 0; }
-  if (s.work.where === "ldr" && s.ldr.grip < 0.1) s.work.where = down(s.ldr) && s.ldr.x.p > 149.7 ? "mold" : "ldr";
-  if (s.work.where === "mold" && s.unl.grip > 0.9 && down(s.unl) && s.unl.x.p > 149.7 && s.lift.p > STROKE - 1) s.work.where = "unl";
-  if (s.work.where === "unl" && s.unl.grip < 0.1 && down(s.unl) && s.unl.x.p < 0.3) { s.work.where = "none"; s.out = { present: true, x: 0, alpha: 1 }; }
-  if (s.work.where === "mold" && closed && s.pBlad > 8) s.work.cured = true; // the mold has printed its pattern
-  if (!s.stand.present) { s.stand.timer -= dt; if (s.stand.timer <= 0) s.stand.present = true; }
-  if (s.out.present && Q.CONV_RUN && en) { s.out.x += 13 * dt; s.out.alpha = sat(1 - (s.out.x - 14) / 12); if (s.out.alpha <= 0) s.out.present = false; }
-  pressure(s, Q, ui.recipe, ui.faults, dt);
-  thermal(s, Q, AQ.TCV_PLATEN / 100, ui.faults.sag, dt);
-}
-// the cure a nominal recipe gives, from the same thermal model: 100 %
-const CURE_REF = (() => {
-  const s = { lift: { p: 0 }, work: { where: "mold" }, tTop: 175, tBot: 175, tBlad: 105, tTire: 28, pBlad: 0.5, cure: 0 };
-  const run = (Q, seconds) => { for (let t = 0; t < seconds; t += 0.5) { pressure(s, Q, NOMINAL, {}, 0.5); thermal(s, Q, 0.42, false, 0.5); s.tTop = s.tBot = 175; } };
-  run({ V_SHAPE: true }, 4); run({ V_STEAM: true }, NOMINAL.steamT); run({ V_N2: true }, NOMINAL.n2T); run({ V_EXH: true }, 8);
-  return s.cure;
-})();
-
-function readInputs() {
-  const s = plant, I = {}, near = (a, target) => Math.abs(a.p - target) < 0.2;
-  I.ESTOP_OK = !ui.estop; I.GUARD_OK = !ui.faults.guard;
-  I.PB_START = Boolean(ui.pulse.start); I.PB_STOP = Boolean(ui.pulse.stop); I.PB_RESET = Boolean(ui.pulse.reset);
-  I.PRESS_OPEN = near(s.lift, STROKE); I.PRESS_CLOSED = near(s.lift, 0); I.PE_STAND = s.stand.present;
-  I.LDR_HOME = near(s.ldr.x, 0); I.LDR_AT_PRESS = near(s.ldr.x, 150); I.LDR_UP = near(s.ldr.z, 0); I.LDR_DOWN = near(s.ldr.z, CARRY);
-  I.LDR_GRIPPED = s.ldr.grip > 0.95 && !ui.faults.grip; I.POST_LOW = near(s.post, 0); I.POST_HIGH = near(s.post, POST_UP); I.PE_CONV = s.out.present && s.out.alpha > 0.5;
-  I.UNL_HOME = near(s.unl.x, 0); I.UNL_AT_PRESS = near(s.unl.x, 150); I.UNL_UP = near(s.unl.z, 0); I.UNL_DOWN = near(s.unl.z, CARRY);
-  I.UNL_GRIPPED = s.unl.grip > 0.95; I.HYD_OK = plc.Q.HYD_PUMP;
-  const A = { TT_TOP: s.tTop + noise(0.25), TT_BOT: s.tBot + noise(0.25), PT_BLAD: s.pBlad + noise(0.03), TT_BLAD: s.tBlad + noise(0.4), PT_HYD: s.force / KN_PER_BAR + noise(0.6), ZT_PRESS: s.lift.p * MM + noise(0.4) };
-  return { I, A };
-}
-
-// ---- PLC program -----------------------------------------------------------------------
+// ---- PLC program ---------------------------------------------------------------------------
 // A step: outputs it energises, the terms that must all be true to leave it, a watchdog, and an explanation.
 const T = (seconds) => ({ label: `T#${seconds}s in step`, test: (c) => c.t >= seconds });
 const X = (name) => ({ label: name, io: name, test: (c) => c.I[name] });
@@ -1232,28 +1216,213 @@ const PHASES = [
   ["Open", "The bladder is vented, then pulled away under vacuum. The press may open only once its pressure reads zero."],
   ["Unload", "The unloader lifts the cured tire onto the conveyor, and the PLC writes one record for it."],
 ];
+const CURE_STEPS = [12, 13];
+const ALARMS = [
+  ["A001", "Emergency stop"], ["A002", "Guard door open"], ["A010", "Step watchdog"],
+  ["A101", "Steam pressure low"], ["A102", "Cure pressure low"], ["A103", "Platen temperature out of band"],
+];
+const PLC_STATES = ["Stopped", "Ready", "Running", "Held", "Fault"];
+const WHERE = ["none", "ldr", "mold", "unl"];
 
-const plc = {
-  step: 0, t: 0, run: false, stopReq: false, hold: false, fault: null, alarms: [], Q: {}, AQ: { TCV_PLATEN: 40, PCV_SQZ: 0 },
-  integral: 40, conv: 0, cycles: 0, r: { ...NOMINAL }, last: {}, rec: null, low: 0, waiting: "", I: {}, A: {},
-};
-for (const [, name] of DO) plc.Q[name] = false;
-function alarm(code, text, level = "warn") {
+// ---- helpers -------------------------------------------------------------------------------
+let random = Math.random;
+const setRandom = (fn) => { random = fn || Math.random; };
+const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
+const sat = (value) => clamp(value, 0, 1);
+const noise = (amount) => (random() + random() + random() - 1.5) * amount;
+const lag = (value, target, dt, tau) => value + (target - value) * (1 - Math.exp(-dt / tau));
+const tSat = (gauge) => 100 * Math.pow(Math.max(0.05, gauge + 1.013), 0.25);
+const cureRate = (t) => Math.pow(2, (t - 160) / 10);
+const axis = (p) => ({ p, v: 0 });
+function drive(a, dir, low, high, speed, dt) {
+  const room = dir > 0 ? high - a.p : dir < 0 ? a.p - low : 0;
+  const want = dir * Math.min(speed, room * 7 + speed * 0.05);
+  a.v += (want - a.v) * (1 - Math.exp(-dt / 0.07));
+  a.p += a.v * dt;
+  if (a.p <= low) { a.p = low; if (a.v < 0) a.v = 0; }
+  if (a.p >= high) { a.p = high; if (a.v > 0) a.v = 0; }
+}
+
+// ---- state ---------------------------------------------------------------------------------
+function createState(nowMs) {
+  const Q = {};
+  for (const [, name] of DO) Q[name] = false;
+  const [after0, after1] = ANOMALY.firstAfterS;
+  return {
+    version: VERSION, bootMs: nowMs, lastMs: nowMs, simT: 0, seq: 0, gapSeconds: 0,
+    cmd: {
+      mode: 0, warp: 30, recipe: { ...NOMINAL }, estop: false, faults: { leak: false, sag: false, grip: false, guard: false },
+      pulse: { start: true }, // the cell starts itself, like an idle tour
+      anomaliesEnabled: true, meanIntervalMin: 10,
+    },
+    plant: {
+      lift: axis(STROKE), force: 0, hydDrop: 0, tcv: 40,
+      ldr: { x: axis(0), z: axis(0), grip: 0 }, // x: 0 at the stand .. 150 at the press
+      unl: { x: axis(0), z: axis(0), grip: 0 }, // x: 0 at the conveyor .. 150 at the press
+      post: axis(0), pBlad: 0, tBlad: 60, tTop: 174.6, tBot: 175.2, tTire: 28, cure: 0,
+      stand: { present: true, timer: 0 }, work: { where: "none", cured: false }, out: { present: false, x: 0, alpha: 0 },
+    },
+    plc: {
+      step: 0, t: 0, run: false, stopReq: false, hold: false, fault: null, alarms: [], alarmSeq: 0, Q, AQ: { TCV_PLATEN: 40, PCV_SQZ: 0 },
+      integral: 40, conv: 0, cycles: 0, r: { ...NOMINAL }, last: {}, rec: null, low: 0, waiting: "", I: {}, A: {},
+    },
+    stats: { total: 0, good: 0, rejected: 0, last: null },
+    anomaly: { active: null, nextMs: nowMs + (after0 + random() * (after1 - after0)) * 1000, count: 0, integratedS: 0 },
+    ai: {}, // values written by AI Inference Server, echoed back like an S7 connector would
+  };
+}
+
+// ---- anomalies -----------------------------------------------------------------------------
+const anomalyDef = (code) => ANOMALIES.find((a) => a.code === code);
+function startAnomaly(state, code, severity) {
+  const def = anomalyDef(code);
+  if (!def) throw new Error(`Unknown anomaly code ${code}; use 1..${ANOMALIES.length}`);
+  const an = state.anomaly, now = state.lastMs;
+  const [s0, s1] = ANOMALY.severity;
+  const durationS = ANOMALY.minDurationS + Math.round(random() * (ANOMALY.maxDurationS - ANOMALY.minDurationS));
+  an.count += 1;
+  an.active = {
+    id: `${CONFIG.namespace}-AN-${String(an.count).padStart(4, "0")}-${new Date(now).toISOString().replace(/[-:]/g, "").slice(0, 15)}`,
+    code, kind: def.kind, severity: Math.round(clamp(severity ?? s0 + random() * (s1 - s0), 0, 1) * 100) / 100,
+    startMs: now, endMs: now + durationS * 1000,
+  };
+}
+function endAnomaly(state) {
+  const an = state.anomaly;
+  an.active = null;
+  const mean = Math.max(1, state.cmd.meanIntervalMin) * 60;
+  an.nextMs = state.lastMs + Math.max(ANOMALY.minGapS, -Math.log(1 - random()) * mean) * 1000;
+}
+function scheduleAnomalies(state, dtWall) {
+  const an = state.anomaly, now = state.lastMs;
+  if (an.active && now >= an.active.endMs) endAnomaly(state);
+  if (!an.active && state.cmd.anomaliesEnabled && now >= an.nextMs) startAnomaly(state, 1 + Math.floor(random() * ANOMALIES.length));
+  if (an.active) an.integratedS += dtWall;
+}
+// What the plant sees right now from manual faults and the active anomaly.
+function effects(state) {
+  const fx = { leakRate: 0, steamBar: 14, platenSupplyC: 195, botTransfer: 1, squeezeGain: 1, squeezeTau: 1, ttTopOffset: 0, ptNoise: 0.03, ptSpikeBar: 0, ldrSpeed: 1, n2Drop: 0, hydLeak: 0, hydRecharge: 0 };
+  const f = state.cmd.faults;
+  if (f.leak) fx.leakRate = 1 / 12;
+  if (f.sag) { fx.steamBar = 9; fx.platenSupplyC = 178; }
+  const a = state.anomaly.active;
+  if (!a) return fx;
+  const s = a.severity, ramp = sat((state.lastMs - a.startMs) / (ANOMALY.rampS * 1000));
+  switch (a.kind) {
+    case "bladder_leak": fx.leakRate = Math.max(fx.leakRate, (s * ramp) / 40); break;
+    case "steam_supply_sag": fx.steamBar = Math.min(fx.steamBar, 14 - 4 * s * ramp); fx.platenSupplyC = Math.min(fx.platenSupplyC, 195 - 14 * s * ramp); break;
+    case "platen_steam_trap": fx.botTransfer = 1 - 0.6 * s * ramp; break;
+    case "hydraulic_leak": fx.squeezeGain = 1 - 0.03 * s * ramp; fx.squeezeTau = 1 + 1.2 * s * ramp; fx.hydLeak = 0.5 * s * ramp; fx.hydRecharge = 60 * s; break;
+    case "platen_sensor_drift": fx.ttTopOffset = 10 * s * sat((state.lastMs - a.startMs) / 180000); break;
+    case "pressure_sensor_noise": fx.ptNoise = 0.03 * (1 + 15 * s * ramp); fx.ptSpikeBar = 2 * s * ramp; break;
+    case "loader_drive_friction": fx.ldrSpeed = 1 - 0.55 * s * ramp; break;
+    case "nitrogen_supply_low": fx.n2Drop = 3.5 * s * ramp; break;
+  }
+  return fx;
+}
+
+// ---- plant ---------------------------------------------------------------------------------
+function thermal(s, Q, tcv, fx, dt) {
+  const closed = s.lift.p < 0.5;
+  for (const key of ["tTop", "tBot"]) {
+    const loss = key === "tTop" && !closed ? 1.9 : 1;
+    const load = closed && s.work.where === "mold" ? (s[key] - s.tTire) / 2600 : 0;
+    const transfer = key === "tBot" ? fx.botTransfer : 1;
+    s[key] += ((tcv * transfer * (fx.platenSupplyC - s[key])) / 70 - (loss * (s[key] - 25)) / 1500 - load) * dt;
+  }
+  if (Q.V_STEAM) s.tBlad = lag(s.tBlad, tSat(s.pBlad), dt, 8);
+  else if (Q.V_N2) s.tBlad = lag(s.tBlad, 150, dt, 520);
+  else if (Q.V_SHAPE) s.tBlad = lag(s.tBlad, 105, dt, 6);
+  else s.tBlad = lag(s.tBlad, closed ? 120 : 60, dt, 25);
+  if (s.work.where === "mold" && closed) {
+    s.tTire = lag(s.tTire, 0.25 * (s.tTop + s.tBot) + 0.5 * s.tBlad, dt, 150);
+    s.cure += cureRate(s.tTire) * dt;
+  }
+}
+function pressure(s, Q, r, fx, dt) {
+  if (Q.V_VAC) s.pBlad = lag(s.pBlad, -0.6, dt, 1.4);
+  else if (Q.V_EXH) s.pBlad = lag(s.pBlad, 0, dt, 2.6);
+  else if (Q.V_N2) s.pBlad = lag(s.pBlad, Math.max(r.n2P - fx.n2Drop, s.pBlad), dt, 4);
+  else if (Q.V_STEAM) s.pBlad = lag(s.pBlad, fx.steamBar, dt, 5);
+  else if (Q.V_SHAPE) s.pBlad = lag(s.pBlad, r.shapeSP, dt, 0.9);
+  else s.pBlad = lag(s.pBlad, 0, dt, 12);
+  if (fx.leakRate && s.pBlad > 0) s.pBlad -= s.pBlad * fx.leakRate * dt;
+}
+function plantStep(state, fx, dt) {
+  const s = state.plant, Q = state.plc.Q, AQ = state.plc.AQ;
+  const en = Q.MOTION_EN; // with the enable valve shut every axis stays where it is
+  drive(s.lift, en && Q.HYD_PUMP ? (Q.PRESS_UP ? 1 : Q.PRESS_DN ? -1 : 0) : 0, 0, STROKE, 17, dt);
+  const closed = s.lift.p < 0.2;
+  // a hydraulic leak bleeds clamp force until the pump cuts back in: a sawtooth on PT_HYD
+  s.hydDrop = closed && Q.SQUEEZE && fx.hydLeak ? s.hydDrop + fx.hydLeak * dt : 0;
+  if (s.hydDrop > fx.hydRecharge) s.hydDrop = 0;
+  s.force = lag(s.force, closed && Q.SQUEEZE ? AQ.PCV_SQZ * KN_PER_BAR * fx.squeezeGain - s.hydDrop : 0, dt, closed ? 0.55 * fx.squeezeTau : 0.2);
+  for (const [unit, fwd, rev, lower, grip, speed] of [[s.ldr, Q.LDR_FWD, Q.LDR_REV, Q.LDR_LOWER, Q.LDR_GRIP, fx.ldrSpeed], [s.unl, Q.UNL_FWD, Q.UNL_REV, Q.UNL_LOWER, Q.UNL_GRIP, 1]]) {
+    drive(unit.x, en ? (fwd ? 1 : rev ? -1 : 0) : 0, 0, 150, 58 * speed, dt);
+    drive(unit.z, en ? (lower ? 1 : -1) : 0, 0, CARRY, 24, dt);
+    if (en) unit.grip = clamp(unit.grip + (grip ? 1 : -1) * dt * 3.2, 0, 1);
+  }
+  drive(s.post, en ? (Q.POST_UP ? 1 : -1) : 0, 0, POST_UP, 15, dt);
+  s.tcv = lag(s.tcv, AQ.TCV_PLATEN, dt, 0.5); // the platen valve's actuator
+  // the tire changes hands
+  const down = (u) => u.z.p > CARRY - 0.3;
+  if (s.work.where === "none" && s.stand.present && s.ldr.grip > 0.9 && down(s.ldr) && s.ldr.x.p < 0.3) { s.work = { where: "ldr", cured: false }; s.stand.present = false; s.stand.timer = 5; s.tTire = 28 + noise(2); s.cure = 0; }
+  if (s.work.where === "ldr" && s.ldr.grip < 0.1) s.work.where = down(s.ldr) && s.ldr.x.p > 149.7 ? "mold" : "ldr";
+  if (s.work.where === "mold" && s.unl.grip > 0.9 && down(s.unl) && s.unl.x.p > 149.7 && s.lift.p > STROKE - 1) s.work.where = "unl";
+  if (s.work.where === "unl" && s.unl.grip < 0.1 && down(s.unl) && s.unl.x.p < 0.3) { s.work.where = "none"; s.out = { present: true, x: 0, alpha: 1 }; }
+  if (s.work.where === "mold" && closed && s.pBlad > 8) s.work.cured = true; // the mold has printed its pattern
+  if (!s.stand.present) { s.stand.timer -= dt; if (s.stand.timer <= 0) s.stand.present = true; }
+  if (s.out.present && Q.CONV_RUN && en) { s.out.x += 13 * dt; s.out.alpha = sat(1 - (s.out.x - 14) / 12); if (s.out.alpha <= 0) s.out.present = false; }
+  pressure(s, Q, state.plc.r, fx, dt);
+  thermal(s, Q, s.tcv / 100, fx, dt);
+}
+// the cure a nominal recipe gives, from the same thermal model: 100 %
+const CURE_REF = (() => {
+  const fx = { leakRate: 0, steamBar: 14, platenSupplyC: 195, botTransfer: 1, n2Drop: 0 };
+  const s = { lift: { p: 0 }, work: { where: "mold" }, tTop: 175, tBot: 175, tBlad: 105, tTire: 28, pBlad: 0.5, cure: 0 };
+  const run = (Q, seconds) => { for (let t = 0; t < seconds; t += 0.5) { pressure(s, Q, NOMINAL, fx, 0.5); thermal(s, Q, 0.42, fx, 0.5); s.tTop = s.tBot = 175; } };
+  run({ V_SHAPE: true }, 4); run({ V_STEAM: true }, NOMINAL.steamT); run({ V_N2: true }, NOMINAL.n2T); run({ V_EXH: true }, 8);
+  return s.cure;
+})();
+const cureIndex = (state) => (state.plant.cure / CURE_REF) * 100;
+
+function readInputs(state, fx) {
+  const s = state.plant, cmd = state.cmd, I = {}, near = (a, target) => Math.abs(a.p - target) < 0.2;
+  I.ESTOP_OK = !cmd.estop; I.GUARD_OK = !cmd.faults.guard;
+  I.PB_START = Boolean(cmd.pulse.start); I.PB_STOP = Boolean(cmd.pulse.stop); I.PB_RESET = Boolean(cmd.pulse.reset);
+  I.PRESS_OPEN = near(s.lift, STROKE); I.PRESS_CLOSED = near(s.lift, 0); I.PE_STAND = s.stand.present;
+  I.LDR_HOME = near(s.ldr.x, 0); I.LDR_AT_PRESS = near(s.ldr.x, 150); I.LDR_UP = near(s.ldr.z, 0); I.LDR_DOWN = near(s.ldr.z, CARRY);
+  I.LDR_GRIPPED = s.ldr.grip > 0.95 && !cmd.faults.grip; I.POST_LOW = near(s.post, 0); I.POST_HIGH = near(s.post, POST_UP); I.PE_CONV = s.out.present && s.out.alpha > 0.5;
+  I.UNL_HOME = near(s.unl.x, 0); I.UNL_AT_PRESS = near(s.unl.x, 150); I.UNL_UP = near(s.unl.z, 0); I.UNL_DOWN = near(s.unl.z, CARRY);
+  I.UNL_GRIPPED = s.unl.grip > 0.95; I.HYD_OK = state.plc.Q.HYD_PUMP;
+  const spike = fx.ptSpikeBar && random() < 0.004 ? (random() < 0.5 ? -1 : 1) * fx.ptSpikeBar * (0.5 + random()) : 0;
+  const current = (a, drag) => 0.35 + (Math.abs(a.v) > 0.5 ? 2.6 + 4.5 * drag : 0) + noise(0.05);
+  const A = {
+    TT_TOP: s.tTop + fx.ttTopOffset + noise(0.25), TT_BOT: s.tBot + noise(0.25), PT_BLAD: s.pBlad + noise(fx.ptNoise) + spike, TT_BLAD: s.tBlad + noise(0.4),
+    PT_HYD: s.force / KN_PER_BAR + noise(0.6), ZT_PRESS: s.lift.p * MM + noise(0.4), IT_LDR: current(s.ldr.x, 1 - fx.ldrSpeed), IT_UNL: current(s.unl.x, 0),
+  };
+  return { I, A };
+}
+
+// ---- PLC -----------------------------------------------------------------------------------
+function alarm(state, code, text, level = "warn") {
+  const plc = state.plc;
   if (plc.alarms.some((a) => a.code === code && a.cycle === plc.cycles && !a.cleared)) return;
-  plc.alarms.unshift({ code, text, level, at: simT, cycle: plc.cycles, cleared: false });
+  plc.alarmSeq += 1;
+  plc.alarms.unshift({ code, text, level, at: state.simT, ms: state.lastMs, cycle: plc.cycles, cleared: false, seq: plc.alarmSeq });
   if (plc.alarms.length > 30) plc.alarms.pop();
   if (plc.rec && level !== "info") plc.rec.alarms.push(code);
-  panels.alarmsDirty = true;
 }
-function scan(dt) {
-  const { I, A } = readInputs();
+function scan(state, fx, dt) {
+  const plc = state.plc;
+  const { I, A } = readInputs(state, fx);
   plc.I = I; plc.A = A;
   const rise = (name) => I[name] && !plc.last[name];
   // safety chain: latched, needs RESET with the chain healthy
-  if (!I.ESTOP_OK && !plc.hold) alarm("A001", "Emergency stop pressed: motion outputs off", "stop");
-  if (!I.GUARD_OK && !plc.hold) alarm("A002", "Guard door open: motion outputs off", "stop");
+  if (!I.ESTOP_OK && !plc.hold) alarm(state, "A001", "Emergency stop pressed: motion outputs off", "stop");
+  if (!I.GUARD_OK && !plc.hold) alarm(state, "A002", "Guard door open: motion outputs off", "stop");
   if (!I.ESTOP_OK || !I.GUARD_OK) plc.hold = true;
-  if (rise("PB_RESET") && I.ESTOP_OK && I.GUARD_OK) { plc.hold = false; plc.fault = null; plc.t = Math.min(plc.t, 0.01 + plc.t * (STEPS[plc.step].process ? 1 : 0)); plc.alarms.forEach((a) => (a.cleared = true)); panels.alarmsDirty = true; }
+  if (rise("PB_RESET") && I.ESTOP_OK && I.GUARD_OK) { plc.hold = false; plc.fault = null; plc.t = Math.min(plc.t, 0.01 + plc.t * (STEPS[plc.step].process ? 1 : 0)); plc.alarms.forEach((a) => (a.cleared = true)); }
   if (rise("PB_START") && !plc.hold && !plc.fault) { plc.run = true; plc.stopReq = false; }
   if (rise("PB_STOP")) plc.stopReq = true;
   const motion = !plc.hold && !plc.fault;
@@ -1268,14 +1437,15 @@ function scan(dt) {
     plc.t += dt;
     const open = step.when.find((term) => !term.test(c));
     plc.waiting = open ? open.label : "";
-    if (!open) advance();
-    else if (step.limit && plc.t > step.limit) { plc.fault = `Step ${plc.step} ${step.name} timed out waiting for ${open.label}`; alarm("A010", plc.fault, "stop"); }
+    if (!open) advanceStep(state);
+    else if (step.limit && plc.t > step.limit) { plc.fault = `Step ${plc.step} ${step.name} timed out waiting for ${open.label}`; alarm(state, "A010", plc.fault, "stop"); }
   }
   // cure supervision
-  if (plc.step === 13 && plc.t > 30) { plc.low = A.PT_BLAD < plc.r.n2P - 2 ? plc.low + dt : 0; if (plc.low > 5) alarm("A102", `Cure pressure low: ${A.PT_BLAD.toFixed(1)} bar, setpoint ${plc.r.n2P} bar`); } else plc.low = 0;
-  if (plc.step === 12 && plc.t > 45 && A.PT_BLAD < 11.5) alarm("A101", `Steam pressure low: ${A.PT_BLAD.toFixed(1)} bar`);
-  if ((plc.step === 12 || plc.step === 13) && Math.abs(error) > 6) alarm("A103", "Platen temperature out of band");
-  if (plc.rec && plc.step >= 12 && plc.step <= 13) { plc.rec.pMax = Math.max(plc.rec.pMax, A.PT_BLAD); plc.rec.tSum += (A.TT_TOP + A.TT_BOT) / 2 * dt; plc.rec.tTime += dt; plc.rec.fMin = Math.min(plc.rec.fMin, A.PT_HYD * KN_PER_BAR); }
+  if (plc.step === 13 && plc.t > 30) { plc.low = A.PT_BLAD < plc.r.n2P - 2 ? plc.low + dt : 0; if (plc.low > 5) alarm(state, "A102", `Cure pressure low: ${A.PT_BLAD.toFixed(1)} bar, setpoint ${plc.r.n2P} bar`); } else plc.low = 0;
+  if (plc.step === 12 && plc.t > 45 && A.PT_BLAD < 11.5) alarm(state, "A101", `Steam pressure low: ${A.PT_BLAD.toFixed(1)} bar`);
+  if ((plc.step === 12 || plc.step === 13) && Math.abs(error) > 6) alarm(state, "A103", "Platen temperature out of band");
+  if (plc.rec && plc.step >= 12 && plc.step <= 13) { plc.rec.pMax = Math.max(plc.rec.pMax, A.PT_BLAD); plc.rec.tSum += ((A.TT_TOP + A.TT_BOT) / 2) * dt; plc.rec.tTime += dt; plc.rec.fMin = Math.min(plc.rec.fMin, A.PT_HYD * KN_PER_BAR); }
+  if (plc.rec && state.anomaly.active && !plc.rec.anomalies.includes(state.anomaly.active.kind)) plc.rec.anomalies.push(state.anomaly.active.kind);
   // outputs: the active step's actions, then interlocks, then the safety mask
   const Q = plc.Q;
   for (const key in Q) Q[key] = false;
@@ -1292,60 +1462,447 @@ function scan(dt) {
   plc.AQ.PCV_SQZ = Q.SQUEEZE ? plc.r.squeezeSP / KN_PER_BAR : 0;
   if (plc.conv > 0 && motion) { plc.conv -= dt; Q.CONV_RUN = true; }
   Q.LAMP_R = plc.hold || Boolean(plc.fault);
-  Q.LAMP_A = !Q.LAMP_R && (plc.stopReq && plc.run || plc.alarms.some((a) => !a.cleared && a.level === "warn") || (plc.run && plc.step === 0));
+  Q.LAMP_A = !Q.LAMP_R && ((plc.stopReq && plc.run) || plc.alarms.some((a) => !a.cleared && a.level === "warn") || (plc.run && plc.step === 0));
   Q.LAMP_G = !Q.LAMP_R && plc.run && plc.step > 0;
   plc.last = I;
 }
-function advance() {
+const serialOf = (state, n) => { const d = new Date(state.lastMs); return `GT${String(d.getUTCFullYear()).slice(2)}${String(d.getUTCMonth() + 1).padStart(2, "0")}${String(d.getUTCDate()).padStart(2, "0")}-${String(n).padStart(4, "0")}`; };
+function advanceStep(state) {
+  const plc = state.plc;
   const from = plc.step;
   plc.step = (plc.step + 1) % STEPS.length;
   plc.t = 0;
-  if (from === 0) { plc.r = { ...ui.recipe }; plc.cycles += 1; plc.rec = { n: plc.cycles, serial: serialOf(plc.cycles), start: simT, pMax: 0, tSum: 0, tTime: 0, fMin: 1e9, alarms: [], recipe: { ...plc.r } }; }
+  if (from === 0) {
+    plc.r = { ...state.cmd.recipe };
+    plc.cycles += 1;
+    plc.rec = { n: plc.cycles, serial: serialOf(state, plc.cycles), start: state.simT, startMs: state.lastMs, pMax: 0, tSum: 0, tTime: 0, fMin: 1e9, alarms: [], anomalies: [], recipe: { ...plc.r } };
+  }
   if (plc.step === 0) {
     plc.conv = 3.2;
-    finish();
-    if (ui.mode === "single" || plc.stopReq) { plc.run = false; plc.stopReq = false; }
+    finish(state);
+    if (state.cmd.mode === 1 || plc.stopReq) { plc.run = false; plc.stopReq = false; }
   }
-  panels.stepDirty = true;
 }
-const serialOf = (n) => { const d = new Date(wallOf(simT)); return `GT${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}-${String(n).padStart(4, "0")}`; };
-function finish() {
-  const rec = plc.rec;
+function finish(state) {
+  const rec = state.plc.rec;
   if (!rec) return;
-  rec.end = simT; rec.cycleTime = simT - rec.start; rec.cure = (plant.cure / CURE_REF) * 100; rec.platen = rec.tTime ? rec.tSum / rec.tTime : 0;
+  rec.end = state.simT; rec.endMs = state.lastMs; rec.cycleTime = rec.end - rec.start; rec.cure = cureIndex(state); rec.platen = rec.tTime ? rec.tSum / rec.tTime : 0;
   const reasons = [];
-  if (rec.cure < 92) reasons.push("under-cured"); if (rec.cure > 135) reasons.push("over-cured");
+  if (rec.cure < 92) reasons.push("under-cured");
+  if (rec.cure > 135) reasons.push("over-cured");
   if (rec.alarms.includes("A102") || rec.alarms.includes("A101")) reasons.push("low pressure");
   if (rec.alarms.includes("A103")) reasons.push("platen temperature");
   rec.ok = reasons.length === 0; rec.reason = reasons.join(", ");
-  cycles.push(rec); plc.rec = null; panels.cyclesDirty = true;
+  const stats = state.stats;
+  stats.total += 1; if (rec.ok) stats.good += 1; else stats.rejected += 1;
+  stats.last = rec; state.plc.rec = null;
 }
 
-// ---- time and data ---------------------------------------------------------------------
-let simT = 0;
-const wall0 = Date.now();
-const wallOf = (t) => wall0 + t * 1000;
+// ---- time ----------------------------------------------------------------------------------
+const curing = (state) => CURE_STEPS.includes(state.plc.step);
+// Integrate from the last call to nowMs in PLC scans. Only the cure steps run faster than real time.
+function advance(state, nowMs) {
+  if (!(nowMs > state.lastMs)) { if (nowMs < state.lastMs) state.lastMs = nowMs; return state; }
+  const gapS = (nowMs - state.lastMs) / 1000;
+  if (gapS > CONFIG.maxCatchupS) { state.gapSeconds += gapS; state.lastMs = nowMs; return state; }
+  let left = gapS;
+  while (left > 1e-9) {
+    const k = curing(state) ? Math.max(1, state.cmd.warp) : 1;
+    const dt = Math.min(CONFIG.scanS, left * k);
+    const dtWall = dt / k;
+    left -= dtWall;
+    state.lastMs = Math.min(nowMs, state.lastMs + dtWall * 1000);
+    scheduleAnomalies(state, dtWall);
+    const fx = effects(state);
+    plantStep(state, fx, dt);
+    scan(state, fx, dt);
+    state.cmd.pulse = {};
+    state.simT += dt;
+  }
+  state.lastMs = nowMs;
+  return state;
+}
+
+// ---- tags ----------------------------------------------------------------------------------
+// The registry is append-only: tag IDs are positions, so new tags go at the end of a group.
+const registry = [];
+function add(group, name, dataType, unit, description, read, options = {}) {
+  registry.push({ id: String(1001 + registry.length), name: `${CONFIG.namespace}.${name}`, group, dataType, unit, description, read, role: options.role || "simulated", write: options.write || null, external: Boolean(options.external) });
+}
+const bool = (v) => {
+  if (v === true || v === 1 || v === "1" || v === "true" || v === "TRUE") return true;
+  if (v === false || v === 0 || v === "0" || v === "false" || v === "FALSE") return false;
+  throw new Error("expects a boolean");
+};
+const integer = (v) => { const n = Number(v); if (!Number.isInteger(n)) throw new Error("expects an integer"); return n; };
+const real = (v) => { const n = Number(v); if (v === "" || v === null || !Number.isFinite(n)) throw new Error("expects a number"); return n; };
+const COERCE = { Bool: bool, Int: integer, DInt: integer, UInt: integer, UDInt: integer, Real: real, String: (v) => String(v) };
+const iso = (ms) => (ms ? new Date(ms).toISOString() : "");
+const activeAlarm = (state, code) => state.plc.alarms.some((a) => a.code === code && !a.cleared);
+const plcState = (plc) => (plc.fault ? 4 : plc.hold ? 3 : plc.run ? (plc.step === 0 ? 1 : 2) : 0);
+
+// Press: I/O image, PLC status, active recipe and the positions the HMI draws from
+add("Press", "Info.DataOrigin", "String", "", "Always simulation, never field measurements", () => "ENGINEERING_SIMULATION", { role: "provenance" });
+add("Press", "Info.ModelVersion", "String", "", "Simulation model version", () => VERSION, { role: "configuration" });
+add("Press", "Info.UtcTimestamp", "String", "", "Snapshot UTC time", (st) => iso(st.lastMs), { role: "diagnostic" });
+add("Press", "Info.Sequence", "UDInt", "", "Publication sequence", (st) => st.seq, { role: "diagnostic" });
+add("Press", "Info.ProcessSeconds", "Real", "s", "Process time; cure steps run faster than wall time by CureWarp", (st) => st.simT, { role: "diagnostic" });
+add("Press", "Info.SkippedSeconds", "Real", "s", "Runtime gaps not backfilled as production", (st) => st.gapSeconds, { role: "diagnostic" });
+for (const [addr, name, text] of DI) add("Press", `IO.DI.${name}`, "Bool", "", `${addr} ${text}`, (st) => Boolean(st.plc.I[name]));
+for (const [addr, name, text] of DO) add("Press", `IO.DO.${name}`, "Bool", "", `${addr} ${text}`, (st) => Boolean(st.plc.Q[name]));
+for (const [addr, name, text, unit] of AI) add("Press", `IO.AI.${name}`, "Real", unit, `${addr} ${text}`, (st) => st.plc.A[name] ?? 0);
+for (const [addr, name, text, unit] of AO) add("Press", `IO.AO.${name}`, "Real", unit, `${addr} ${text}`, (st) => st.plc.AQ[name]);
+add("Press", "PLC.State", "Int", "", "0 stopped, 1 ready, 2 running, 3 held, 4 fault", (st) => plcState(st.plc));
+add("Press", "PLC.Step", "Int", "", "Active sequence step 0..26", (st) => st.plc.step);
+add("Press", "PLC.StepName", "String", "", "Active sequence step name", (st) => STEPS[st.plc.step].name);
+add("Press", "PLC.Phase", "String", "", "Load, Shape, Close, Cure, Open or Unload", (st) => STEPS[st.plc.step].phase);
+add("Press", "PLC.StepTimeS", "Real", "s", "Process time in the active step", (st) => st.plc.t);
+add("Press", "PLC.RunLatched", "Bool", "", "Start latched", (st) => st.plc.run);
+add("Press", "PLC.StopRequested", "Bool", "", "Cycle stop pending at the end of the cycle", (st) => st.plc.stopReq);
+add("Press", "PLC.SafetyHold", "Bool", "", "Safety chain opened; needs Reset", (st) => st.plc.hold);
+add("Press", "PLC.Faulted", "Bool", "", "Sequence fault latched; needs Reset", (st) => Boolean(st.plc.fault));
+add("Press", "PLC.FaultText", "String", "", "Latched fault", (st) => st.plc.fault || "");
+add("Press", "PLC.Waiting", "String", "", "First open transition term of the active step", (st) => st.plc.waiting);
+add("Press", "PLC.CycleNumber", "UDInt", "count", "Cycles started", (st) => st.plc.cycles);
+for (const [key, tag, label, , , , unit] of RECIPE) add("Press", `Recipe.Active.${tag}`, "Real", unit, `${label} of the cycle in progress`, (st) => st.plc.r[key], { role: "configuration" });
+add("Press", "Process.CureIndexPct", "Real", "%", "Cure state of the tire in the mold; 100 = nominal recipe", (st) => cureIndex(st), { role: "model" });
+add("Press", "Process.TireTemperatureC", "Real", "°C", "Modelled tire core temperature", (st) => st.plant.tTire, { role: "model" });
+add("Press", "Motion.LiftPos", "Real", "unit", "Press opening, 0 closed .. 55 open", (st) => st.plant.lift.p, { role: "visualisation" });
+add("Press", "Motion.LoaderX", "Real", "unit", "Loader carriage, 0 stand .. 150 press", (st) => st.plant.ldr.x.p, { role: "visualisation" });
+add("Press", "Motion.LoaderZ", "Real", "unit", "Loader chuck, 0 up .. 23 down", (st) => st.plant.ldr.z.p, { role: "visualisation" });
+add("Press", "Motion.LoaderGrip", "Real", "", "Loader fingers, 0 closed .. 1 spread", (st) => st.plant.ldr.grip, { role: "visualisation" });
+add("Press", "Motion.UnloaderX", "Real", "unit", "Unloader carriage, 0 conveyor .. 150 press", (st) => st.plant.unl.x.p, { role: "visualisation" });
+add("Press", "Motion.UnloaderZ", "Real", "unit", "Unloader chuck, 0 up .. 23 down", (st) => st.plant.unl.z.p, { role: "visualisation" });
+add("Press", "Motion.UnloaderGrip", "Real", "", "Unloader fingers, 0 closed .. 1 spread", (st) => st.plant.unl.grip, { role: "visualisation" });
+add("Press", "Motion.PostPos", "Real", "unit", "Centre post, 0 low .. 22 high", (st) => st.plant.post.p, { role: "visualisation" });
+add("Press", "Motion.BladderBar", "Real", "bar", "Bladder pressure without transmitter error, for the drawing", (st) => st.plant.pBlad, { role: "visualisation" });
+add("Press", "Motion.StandTire", "Bool", "", "Green tire on the stand", (st) => st.plant.stand.present, { role: "visualisation" });
+add("Press", "Motion.WorkTire", "Int", "", "Tire in work: 0 none, 1 loader, 2 mold, 3 unloader", (st) => WHERE.indexOf(st.plant.work.where), { role: "visualisation" });
+add("Press", "Motion.WorkCured", "Bool", "", "Tire in work is cured", (st) => st.plant.work.cured, { role: "visualisation" });
+add("Press", "Motion.OutTire", "Bool", "", "Cured tire on the conveyor", (st) => st.plant.out.present, { role: "visualisation" });
+add("Press", "Motion.OutX", "Real", "unit", "Cured tire travel along the conveyor", (st) => st.plant.out.x, { role: "visualisation" });
+add("Press", "Motion.OutAlpha", "Real", "", "Cured tire leaving the drawing, 1 .. 0", (st) => st.plant.out.alpha, { role: "visualisation" });
+
+// Cycle: the record of the last finished tire, counters and alarms
+const last = (st) => st.stats.last || {};
+add("Cycle", "Cycle.Total", "UDInt", "count", "Finished tires", (st) => st.stats.total, { role: "counter" });
+add("Cycle", "Cycle.Good", "UDInt", "count", "Tires judged OK", (st) => st.stats.good, { role: "counter" });
+add("Cycle", "Cycle.Rejected", "UDInt", "count", "Tires judged NOK", (st) => st.stats.rejected, { role: "counter" });
+add("Cycle", "Cycle.Last.Number", "UDInt", "", "Cycle number of the last finished tire", (st) => last(st).n || 0);
+add("Cycle", "Cycle.Last.Serial", "String", "", "Serial of the last finished tire", (st) => last(st).serial || "");
+add("Cycle", "Cycle.Last.StartUtc", "String", "", "Cycle start", (st) => iso(last(st).startMs));
+add("Cycle", "Cycle.Last.EndUtc", "String", "", "Cycle end", (st) => iso(last(st).endMs));
+add("Cycle", "Cycle.Last.CycleTimeS", "Real", "s", "Cycle time in process seconds", (st) => last(st).cycleTime || 0);
+add("Cycle", "Cycle.Last.PMaxBar", "Real", "bar", "Highest bladder pressure in the cure", (st) => last(st).pMax || 0);
+add("Cycle", "Cycle.Last.PlatenMeanC", "Real", "°C", "Mean platen temperature in the cure", (st) => last(st).platen || 0);
+add("Cycle", "Cycle.Last.SqueezeMinKn", "Real", "kN", "Lowest squeeze force in the cure", (st) => (last(st).n ? last(st).fMin : 0));
+add("Cycle", "Cycle.Last.CureIndexPct", "Real", "%", "Cure index of the last tire", (st) => last(st).cure || 0);
+add("Cycle", "Cycle.Last.Ok", "Bool", "", "Last tire judged OK", (st) => Boolean(last(st).ok));
+add("Cycle", "Cycle.Last.Reason", "String", "", "Why the last tire was rejected", (st) => last(st).reason || "");
+add("Cycle", "Cycle.Last.Alarms", "String", "", "Alarm codes raised in the cycle", (st) => (last(st).alarms || []).join(" "));
+for (const [key, tag, label, , , , unit] of RECIPE) add("Cycle", `Cycle.Last.Sp.${tag}`, "Real", unit, `${label} the last tire was cured with`, (st) => (last(st).recipe ? last(st).recipe[key] : 0), { role: "configuration" });
+add("Cycle", "Alarm.ActiveCount", "UInt", "count", "Uncleared alarms", (st) => st.plc.alarms.filter((a) => !a.cleared).length);
+add("Cycle", "Alarm.Seq", "UDInt", "", "Increments with every new alarm", (st) => st.plc.alarmSeq);
+add("Cycle", "Alarm.LastCode", "String", "", "Code of the newest alarm", (st) => (st.plc.alarms[0] || {}).code || "");
+add("Cycle", "Alarm.LastText", "String", "", "Text of the newest alarm", (st) => (st.plc.alarms[0] || {}).text || "");
+add("Cycle", "Alarm.LastLevel", "String", "", "warn or stop", (st) => (st.plc.alarms[0] || {}).level || "");
+add("Cycle", "Alarm.LastAtS", "Real", "s", "Process time of the newest alarm", (st) => (st.plc.alarms[0] || {}).at || 0);
+for (const [code, text] of ALARMS) add("Cycle", `Alarm.Active.${code}`, "Bool", "", text, (st) => activeAlarm(st, code));
+
+// Anomaly: ground truth of the injected anomaly. Exclude from detector inputs; use it to score them.
+const act = (st) => st.anomaly.active;
+add("Anomaly", "Anomaly.Active", "Bool", "", "An injected anomaly is acting on the plant", (st) => Boolean(act(st)), { role: "ground_truth" });
+add("Anomaly", "Anomaly.TypeCode", "Int", "", "0 none, " + ANOMALIES.map((a) => `${a.code} ${a.kind}`).join(", "), (st) => (act(st) ? act(st).code : 0), { role: "ground_truth" });
+add("Anomaly", "Anomaly.Type", "String", "", "Anomaly kind", (st) => (act(st) ? act(st).kind : ""), { role: "ground_truth" });
+add("Anomaly", "Anomaly.Severity", "Real", "", "0..1", (st) => (act(st) ? act(st).severity : 0), { role: "ground_truth" });
+add("Anomaly", "Anomaly.EventId", "String", "", "Unique event identifier", (st) => (act(st) ? act(st).id : ""), { role: "ground_truth" });
+add("Anomaly", "Anomaly.StartUtc", "String", "", "Onset", (st) => (act(st) ? iso(act(st).startMs) : ""), { role: "ground_truth" });
+add("Anomaly", "Anomaly.EndUtc", "String", "", "Scheduled end", (st) => (act(st) ? iso(act(st).endMs) : ""), { role: "ground_truth" });
+add("Anomaly", "Anomaly.SecondsRemaining", "Real", "s", "Wall seconds until the anomaly ends", (st) => (act(st) ? Math.max(0, (act(st).endMs - st.lastMs) / 1000) : 0), { role: "ground_truth" });
+add("Anomaly", "Anomaly.Count", "UDInt", "count", "Anomalies injected since start", (st) => st.anomaly.count, { role: "ground_truth" });
+add("Anomaly", "Anomaly.IntegratedSeconds", "Real", "s", "Wall seconds with an anomaly active", (st) => st.anomaly.integratedS, { role: "ground_truth" });
+add("Anomaly", "Anomaly.LastCycleTypes", "String", "", "Anomaly kinds active during the last finished tire", (st) => (last(st).anomalies || []).join(" "), { role: "ground_truth" });
+
+// Command: written by the HMI or any databus client on the write topic, read back like a PLC DB
+const pulse = (key) => ({ role: "command", write: (st, v) => { if (v) st.cmd.pulse[key] = true; } });
+add("Command", "Cmd.Start", "Bool", "", "Pulse: start push button", () => false, pulse("start"));
+add("Command", "Cmd.Stop", "Bool", "", "Pulse: cycle stop push button", () => false, pulse("stop"));
+add("Command", "Cmd.Reset", "Bool", "", "Pulse: reset push button", () => false, pulse("reset"));
+add("Command", "Cmd.EStop", "Bool", "", "Emergency stop pressed (latched)", (st) => st.cmd.estop, { role: "command", write: (st, v) => { st.cmd.estop = v; } });
+add("Command", "Cmd.Mode", "Int", "", "0 automatic, 1 single cycle", (st) => st.cmd.mode, { role: "command", write: (st, v) => { if (v !== 0 && v !== 1) throw new Error("must be 0 or 1"); st.cmd.mode = v; } });
+add("Command", "Cmd.CureWarp", "Int", "x", "Cure steps run this many times faster than wall time, 1..120", (st) => st.cmd.warp, { role: "command", write: (st, v) => { st.cmd.warp = clamp(v, 1, 120); } });
+for (const [key, tag, label, min, max, , unit] of RECIPE) add("Command", `Cmd.Recipe.${tag}`, "Real", unit, `${label} for the next cycle, ${min}..${max}`, (st) => st.cmd.recipe[key], { role: "command", write: (st, v) => { st.cmd.recipe[key] = clamp(v, min, max); } });
+for (const [key, tag, label] of FAULTS) add("Command", `Cmd.Fault.${tag}`, "Bool", "", `Manual fault: ${label}`, (st) => st.cmd.faults[key], { role: "command", write: (st, v) => { st.cmd.faults[key] = v; } });
+add("Command", "Cmd.Anomaly.RandomEnabled", "Bool", "", "Inject random anomalies", (st) => st.cmd.anomaliesEnabled, { role: "command", write: (st, v) => {
+  if (v && !st.cmd.anomaliesEnabled && !st.anomaly.active) endAnomaly(st); // schedule the next one from now
+  st.cmd.anomaliesEnabled = v;
+} });
+add("Command", "Cmd.Anomaly.MeanIntervalMin", "Real", "min", "Mean wall minutes between random anomalies, 1..1440", (st) => st.cmd.meanIntervalMin, { role: "command", write: (st, v) => {
+  st.cmd.meanIntervalMin = clamp(v, 1, 1440);
+  if (!st.anomaly.active) endAnomaly(st);
+} });
+add("Command", "Cmd.Anomaly.Inject", "Int", "", "Write a type code to start that anomaly now (replaces an active one)", () => 0, { role: "command", write: (st, v) => { if (v) startAnomaly(st, v); } });
+add("Command", "Cmd.Anomaly.Clear", "Bool", "", "Pulse: end the active anomaly", () => false, { role: "command", write: (st, v) => { if (v && st.anomaly.active) endAnomaly(st); } });
+
+// AI: outputs of an AI Inference Server pipeline. Never written by the simulation; declared so AIIS can map them.
+// AIIS writes SIMATIC v1 outputs as integers, so the values are scaled DInt codes.
+const aiTag = (name, description) => add("AI", `AI.${name}`, "DInt", "", description, (st) => (st.ai[`${CONFIG.namespace}.AI.${name}`] || {}).val ?? 0,
+  { role: "ai_output", external: true, write: (st, v, name2, ms) => { st.ai[name2] = { val: v, ms }; } });
+aiTag("AnomalyScore", "AI anomaly score 0..1000 permille; 500 = warning threshold");
+aiTag("Status", "AI status: 0 normal, 1 warning, 2 alarm");
+aiTag("PredictedType", "AI guess of the anomaly type code, 0 none");
+
+// ---- SIMATIC v1 messages -------------------------------------------------------------------
+const topics = () => {
+  const { connector, connection } = CONFIG;
+  return {
+    metadata: `ie/m/j/simatic/v1/${connector}/dp`,
+    read: `ie/d/j/simatic/v1/${connector}/dp/r/${connection}`,
+    write: `ie/d/j/simatic/v1/${connector}/dp/w/${connection}`,
+  };
+};
+const groups = [...new Set(registry.map((tag) => tag.group))];
+const chunks = groups.flatMap((group) => {
+  const entries = registry.filter((tag) => tag.group === group);
+  const result = [];
+  for (let offset = 0; offset < entries.length; offset += 100) result.push({ name: `${group}_${offset / 100}`, group, entries: entries.slice(offset, offset + 100) });
+  return result;
+});
+const publishedChunks = chunks.filter((chunk) => !chunk.entries.every((tag) => tag.external));
+const writableChunks = chunks.filter((chunk) => chunk.entries.some((tag) => tag.write));
+const byId = new Map(registry.map((tag) => [tag.id, tag]));
+const byName = new Map(registry.map((tag) => [tag.name, tag]));
+const chunkOf = new Map(chunks.flatMap((chunk) => chunk.entries.map((tag) => [tag.id, chunk.name])));
+
+function catalog() {
+  return registry.map(({ read, write, ...definition }) => ({ ...definition, chunk: chunkOf.get(definition.id), access: write ? "rw" : "r" }));
+}
+function hashVersion() {
+  let h = 2166136261;
+  for (const ch of JSON.stringify([VERSION, CONFIG.connector, CONFIG.connection, catalog()])) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function metadata() {
+  const t = topics();
+  return {
+    applicationName: CONFIG.applicationName,
+    connections: [{
+      name: CONFIG.connection, type: "S7Plus",
+      dataPoints: chunks.map((chunk) => ({
+        name: chunk.name, publishType: "bulk", topic: `${t.read}/${chunk.name}`,
+        ...(writableChunks.includes(chunk) ? { pubTopic: `${t.write}/${chunk.name}` } : {}),
+        dataPointDefinitions: chunk.entries.map((tag) => ({
+          id: tag.id, name: tag.name, dataType: tag.dataType, accessMode: tag.write ? "rw" : "r",
+          acquisitionCycleInMs: CONFIG.publishEveryMs, acquisitionMode: "Cyclic",
+        })),
+      })),
+    }],
+    hashVersion: hashVersion(),
+    seq: 1,
+  };
+}
+function encode(tag, value) {
+  if (tag.dataType === "Bool") return Boolean(value);
+  if (tag.dataType === "String") return String(value ?? "").slice(0, 254);
+  if (typeof value !== "number" || !Number.isFinite(value)) throw new Error(`Non-finite value: ${tag.name}`);
+  return tag.dataType === "Real" ? Math.round(value * 1e6) / 1e6 : Math.round(value);
+}
+// One bulk payload per published chunk, as an S7 connector would send them.
+function messages(state) {
+  state.seq = state.seq >= 4294967295 ? 1 : state.seq + 1;
+  const ts = iso(state.lastMs), base = topics().read;
+  return publishedChunks.map((chunk) => ({
+    chunk: chunk.name, topic: `${base}/${chunk.name}`,
+    payload: { seq: state.seq, vals: chunk.entries.filter((tag) => !tag.external).map((tag) => ({ id: tag.id, qc: 3, ts, val: encode(tag, tag.read(state)) })) },
+  }));
+}
+// Values by name, the HMI's view of one publication.
+function snapshot(state) {
+  const values = {};
+  for (const tag of registry) if (!tag.external || state.ai[tag.name]) values[tag.name] = encode(tag, tag.read(state));
+  return values;
+}
+// Apply writes, by tag name or SIMATIC id. Returns what was applied, what was refused and the read-back
+// messages for externally written chunks (the S7 connector echoes AI outputs on the read topic).
+function applyWrites(state, values, nowMs = state.lastMs) {
+  const applied = [], errors = [], external = [];
+  for (const [key, raw] of Object.entries(values || {})) {
+    const tag = byId.get(String(key)) || byName.get(key) || byName.get(`${CONFIG.namespace}.${key}`);
+    if (!tag) { errors.push(`${key}: unknown tag`); continue; }
+    if (!tag.write) { errors.push(`${tag.name}: read-only`); continue; }
+    try {
+      tag.write(state, COERCE[tag.dataType](raw), tag.name, nowMs);
+      applied.push(tag.name);
+      if (tag.external) external.push(tag);
+    } catch (error) { errors.push(`${tag.name}: ${error.message}`); }
+  }
+  const base = topics().read;
+  const echoes = [...new Set(external.map((tag) => chunkOf.get(tag.id)))].map((name) => ({
+    chunk: name, topic: `${base}/${name}`,
+    payload: { seq: state.seq, vals: external.filter((tag) => chunkOf.get(tag.id) === name).map((tag) => ({ id: tag.id, qc: 3, ts: iso(state.ai[tag.name].ms), val: encode(tag, tag.read(state)) })) },
+  }));
+  return { applied, errors, echoes };
+}
+// SIMATIC v1 write payload {seq, vals:[{id, val}]} to {id: val}
+function parseWrite(payload) {
+  const p = typeof payload === "string" ? JSON.parse(payload) : payload;
+  const values = {};
+  for (const v of Array.isArray(p && p.vals) ? p.vals : []) if (v && v.id !== undefined) values[String(v.id)] = v.val;
+  return values;
+}
+
+module.exports = {
+  VERSION, CONFIG, configure, GEOMETRY, MM, KN_PER_BAR, DI, DO, AI, AO, RECIPE, NOMINAL, FAULTS, ANOMALIES, ANOMALY, STEPS, PHASES, ALARMS, PLC_STATES, WHERE, CURE_STEPS,
+  createState, advance, applyWrites, parseWrite, snapshot, messages, metadata, catalog, topics, hashVersion, startAnomaly, endAnomaly, effects, cureIndex, setRandom,
+  chunks: chunks.map(({ name, group, entries }) => ({ name, group, ids: entries.map((tag) => tag.id), external: entries.every((tag) => tag.external), writable: entries.some((tag) => tag.write) })),
+  publishedChunks: publishedChunks.map((chunk) => chunk.name),
+};
+
+return module.exports;
+})();
+{
+const DATA = {"P":{"origin":[386.09851696268146,376.1943211408599],"scale":1.2607033813838513,"azimuth":52,"elevation":30},"SEAT":81,"PART":92,"STROKE":55,"CARRY":23,"STAND_X":-150,"CONV_X":150,"TIRE":{"rIn":19,"rBead":24,"rOut":37,"h":22,"shoulder":5},"CAVITY_R":37.6,"fingers":[0.5235987755982988,1.5707963267948966,2.617993877991494,3.665191429188092,4.71238898038469,5.759586531581288],"valves":["TCV","SHAPE","STEAM","N2","EXH","VAC"],"mode":"local"};
+// Tire curing press HMI: draws the press and its panels from tag values, and sends operator commands as tag writes.
+// Databus mode: the plant model and PLC run in a Flow Creator flow on the Industrial Edge device; values arrive
+// from the HMI server, which reads the SIMATIC v1 topics on the IE Databus. Local mode (the standalone page):
+// the same model runs in this page behind the same interface. Nothing below reads the model's internal state.
+const M = TirePress;
+const P = DATA.P;
+const { SEAT, STAND_X, CONV_X } = DATA;
+const { STROKE, CARRY, POST_UP } = M.GEOMETRY;
+const { KN_PER_BAR, STEPS, PHASES, DI, DO, AI, AO, RECIPE, FAULTS, ANOMALIES, PLC_STATES, WHERE, NOMINAL } = M;
+const NS = M.CONFIG.namespace + ".";
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+const partEl = (name) => $(`[data-part="${name}"]`);
+const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
+const sat = (value) => clamp(value, 0, 1);
+const still = matchMedia("(prefers-reduced-motion: reduce)");
+const esc = (text) => String(text).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
+const short = (name) => (name.startsWith(NS) ? name.slice(NS.length) : name);
+
+// ---- data source ---------------------------------------------------------------------------
+const live = {}; // latest value of every tag, by name without the namespace
+const link = { mode: DATA.mode, server: false, connected: false, metadata: false, lastDataMs: 0, writesEnabled: true, lastError: "", connector: M.CONFIG.connector, connection: M.CONFIG.connection, topics: null };
+let writable = new Set();
+function ingest(values) {
+  const changed = {};
+  for (const name in values) changed[short(name)] = values[name];
+  Object.assign(live, changed);
+  link.lastDataMs = Date.now();
+  received(changed);
+}
+const withNs = (values) => Object.fromEntries(Object.entries(values).map(([name, value]) => [NS + name, value]));
+function localSource() {
+  const state = M.createState(Date.now());
+  Object.assign(link, { server: true, connected: true, metadata: true });
+  writable = new Set(M.catalog().filter((tag) => tag.access === "rw").map((tag) => short(tag.name)));
+  return {
+    pump() { M.advance(state, Date.now()); ingest(M.snapshot(state)); },
+    write(values) { const result = M.applyWrites(state, withNs(values)); ingest(M.snapshot(state)); return Promise.resolve(result.errors); },
+  };
+}
+function databusSource() {
+  const events = new EventSource("api/events");
+  events.addEventListener("open", () => { link.server = true; paintLink(); });
+  events.addEventListener("error", () => { link.server = false; paintLink(); });
+  // lastDataMs is the server's clock; staleness is judged on this browser's own arrival times
+  events.addEventListener("status", (event) => { const { lastDataMs, ...status } = JSON.parse(event.data); Object.assign(link, status); paintLink(); });
+  events.addEventListener("meta", (event) => { writable = new Set(JSON.parse(event.data).filter((tag) => tag.access === "rw").map((tag) => short(tag.name))); paintControls(true); });
+  events.addEventListener("data", (event) => ingest(JSON.parse(event.data).values));
+  return {
+    pump() {},
+    write(values) {
+      return fetch("api/write", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ values: withNs(values) }) })
+        .then((response) => response.json().then((body) => (body.error ? [body.error] : body.refused || [])))
+        .catch((error) => [`HMI server unreachable: ${error.message}`]);
+    },
+  };
+}
+const source = DATA.mode === "databus" ? databusSource() : localSource();
+let writeNote = "";
+function write(values) {
+  const names = Object.keys(values);
+  if (!names.every((name) => writable.has(name))) { note("Not writable yet: waiting for the connector's metadata."); return; }
+  source.write(values).then((errors) => note(errors.length ? errors.join(" · ") : ""));
+}
+function note(text) { writeNote = text; const el = $("[data-write-note]"); el.textContent = text; el.hidden = !text; }
+
+// ---- samples: the drawing moves between publications instead of jumping ----------------------
+const MOTION = ["Motion.LiftPos", "Motion.LoaderX", "Motion.LoaderZ", "Motion.LoaderGrip", "Motion.UnloaderX", "Motion.UnloaderZ", "Motion.UnloaderGrip", "Motion.PostPos", "Motion.OutX", "Motion.OutAlpha", "Motion.BladderBar"];
+let from = null, to = null, t0 = 0, span = 100, arrived = 0;
+function received(changed) {
+  if ("Info.ProcessSeconds" in changed || "Info.Sequence" in changed) {
+    const now = performance.now();
+    if (arrived) span = clamp(0.8 * span + 0.2 * (now - arrived), 16, 2000);
+    arrived = now;
+    from = to ? view(now) : { ...live };
+    to = { ...live };
+    t0 = now;
+    record();
+  }
+  trackAlarms();
+  trackCycles();
+}
+// What the page shows at a moment: positions interpolated, everything else switching when the move lands,
+// so lamps, numbers and the drawing always come from the same publication.
+function view(now) {
+  if (!to) return null;
+  const k = still.matches ? 1 : sat((now - t0) / (span * 0.9));
+  const v = { ...(k >= 1 ? to : from) };
+  for (const key of MOTION) if (typeof to[key] === "number" && typeof from[key] === "number") v[key] = from[key] + (to[key] - from[key]) * k;
+  for (const key in live) if (!(key in to)) v[key] = live[key];
+  // commands, cycle records, alarms and anomalies come on their own chunks: show them as they arrive
+  for (const key in live) if (!key.startsWith("IO.") && !key.startsWith("Motion.") && !key.startsWith("PLC.") && !key.startsWith("Info.") && !key.startsWith("Recipe.") && !key.startsWith("Process.")) v[key] = live[key];
+  return v;
+}
+let V = null; // the view being painted this frame
+const I = (v) => Object.fromEntries(DI.map(([, name]) => [name, Boolean(v["IO.DI." + name])]));
+const Q = (v) => Object.fromEntries(DO.map(([, name]) => [name, Boolean(v["IO.DO." + name])]));
+const A = (v) => Object.fromEntries(AI.map(([, name]) => [name, Number(v["IO.AI." + name]) || 0]));
+const activeRecipe = (v) => ({ ...Object.fromEntries(RECIPE.map(([key, tag]) => [key, v["Recipe.Active." + tag]])), shapeSP: NOMINAL.shapeSP });
+
+// ---- history this page has seen: process rows, cycle records, alarms --------------------------
 const rows = [];
 const cycles = [];
+const alarmLog = [];
+const panels = { stepDirty: true, alarmsDirty: true, cyclesDirty: false, lastStep: -1 };
 let nextSample = 0;
-const COLUMNS = ["t_s", "timestamp", "cycle", "step", "step_name", "tt_top_c", "tt_bot_c", "pt_blad_bar", "tt_blad_c", "f_squeeze_kn", "zt_press_mm", "tcv_platen_pct", "cure_index_pct", "v_shape", "v_steam", "v_n2", "v_exh", "v_vac", "alarm"];
-function sample() {
-  const A = plc.A, Q = plc.Q;
-  rows.push([Math.round(simT), new Date(wallOf(simT)).toISOString(), plc.cycles, plc.step, STEPS[plc.step].name, +A.TT_TOP.toFixed(1), +A.TT_BOT.toFixed(1), +A.PT_BLAD.toFixed(2), +A.TT_BLAD.toFixed(1), Math.max(0, Math.round(A.PT_HYD * KN_PER_BAR)), Math.max(0, Math.round(A.ZT_PRESS)), Math.round(plc.AQ.TCV_PLATEN), +((plant.cure / CURE_REF) * 100).toFixed(1), +Q.V_SHAPE, +Q.V_STEAM, +Q.V_N2, +Q.V_EXH, +Q.V_VAC, plc.fault ? "FAULT" : plc.hold ? "HOLD" : ""]);
+const COLUMNS = ["t_s", "timestamp", "cycle", "step", "step_name", "tt_top_c", "tt_bot_c", "pt_blad_bar", "tt_blad_c", "f_squeeze_kn", "zt_press_mm", "tcv_platen_pct", "cure_index_pct", "v_shape", "v_steam", "v_n2", "v_exh", "v_vac", "alarm", "it_ldr_a", "it_unl_a", "anomaly_active", "anomaly_type", "anomaly_severity"];
+function record() {
+  const v = live, t = Number(v["Info.ProcessSeconds"]) || 0;
+  if (rows.length && t < rows[rows.length - 1][0] - 1) { rows.length = 0; nextSample = 0; } // the simulation restarted
+  if (t < nextSample) return;
+  nextSample = Math.floor(t) + 1;
+  const a = A(v), q = Q(v);
+  rows.push([Math.round(t), v["Info.UtcTimestamp"] || new Date().toISOString(), v["PLC.CycleNumber"], v["PLC.Step"], v["PLC.StepName"], +a.TT_TOP.toFixed(1), +a.TT_BOT.toFixed(1), +a.PT_BLAD.toFixed(2), +a.TT_BLAD.toFixed(1), Math.max(0, Math.round(a.PT_HYD * KN_PER_BAR)), Math.max(0, Math.round(a.ZT_PRESS)), Math.round(v["IO.AO.TCV_PLATEN"] || 0), +(Number(v["Process.CureIndexPct"]) || 0).toFixed(1), +q.V_SHAPE, +q.V_STEAM, +q.V_N2, +q.V_EXH, +q.V_VAC, v["PLC.Faulted"] ? "FAULT" : v["PLC.SafetyHold"] ? "HOLD" : "", +a.IT_LDR.toFixed(2), +a.IT_UNL.toFixed(2), +Boolean(v["Anomaly.Active"]), v["Anomaly.Type"] || "", Number(v["Anomaly.Severity"]) || 0]);
   if (rows.length > 60000) rows.splice(0, 5000);
+  chartsDirty = true;
 }
-function tick(realDt) {
-  const curing = plc.step === 12 || plc.step === 13;
-  let left = realDt * (curing ? ui.warp : 1);
-  while (left > 1e-6) {
-    const dt = Math.min(SCAN, left);
-    left -= dt;
-    plantStep(dt, plc.Q, plc.AQ);
-    scan(dt);
-    simT += dt;
-    if (simT >= nextSample) { sample(); nextSample = Math.floor(simT) + 1; }
+let alarmSeen = null;
+function trackAlarms() {
+  const seq = live["Alarm.Seq"];
+  if (seq === undefined) return;
+  if (alarmSeen !== null && seq < alarmSeen) { alarmLog.length = 0; alarmSeen = null; }
+  if (seq !== alarmSeen && live["Alarm.LastCode"]) {
+    const missed = alarmSeen === null ? 0 : Math.max(0, seq - alarmSeen - 1);
+    alarmLog.unshift({ code: live["Alarm.LastCode"], text: live["Alarm.LastText"] + (missed ? ` (+${missed} more between publications)` : ""), level: live["Alarm.LastLevel"], at: live["Alarm.LastAtS"], cleared: !live["Alarm.Active." + live["Alarm.LastCode"]] });
+    if (alarmLog.length > 30) alarmLog.pop();
+    panels.alarmsDirty = true;
   }
-  ui.pulse = {};
+  alarmSeen = seq;
+  for (const a of alarmLog) if (!a.cleared && live["Alarm.Active." + a.code] === false) { a.cleared = true; panels.alarmsDirty = true; }
+}
+let cycleSeen = null;
+function trackCycles() {
+  const n = live["Cycle.Last.Number"];
+  if (n === undefined || n === cycleSeen || live["Cycle.Last.Serial"] === undefined) return;
+  if (cycleSeen !== null && n < cycleSeen) cycles.length = 0;
+  cycleSeen = n;
+  if (!n) return;
+  const v = live;
+  cycles.push({ n, serial: v["Cycle.Last.Serial"], start: v["Cycle.Last.StartUtc"], end: v["Cycle.Last.EndUtc"], cycleTime: v["Cycle.Last.CycleTimeS"], pMax: v["Cycle.Last.PMaxBar"], platen: v["Cycle.Last.PlatenMeanC"], fMin: v["Cycle.Last.SqueezeMinKn"], cure: v["Cycle.Last.CureIndexPct"], ok: v["Cycle.Last.Ok"], reason: v["Cycle.Last.Reason"], alarms: v["Cycle.Last.Alarms"], anomalies: v["Anomaly.LastCycleTypes"] || "", recipe: Object.fromEntries(RECIPE.map(([key, tag]) => [key, v["Cycle.Last.Sp." + tag]])) });
+  panels.cyclesDirty = true;
 }
 
 // ---- drawing ---------------------------------------------------------------------------
@@ -1365,74 +1922,76 @@ const lamps = new Map($$(".tp-lamp").map((el) => [el.dataset.lamp, el]));
 const move = (el, v) => el.setAttribute("transform", translateAlong(P, v));
 const show = (el, on) => { const value = on ? "" : "none"; if (el.style.display !== value) el.style.display = value; };
 const flag = (el, name, on) => { if (on) { if (!el.hasAttribute(name)) el.setAttribute(name, ""); } else if (el.hasAttribute(name)) el.removeAttribute(name); };
+const bladder = { r: 12, h: 16 };
 let bladderKey = "";
-function bladderShape() {
-  const s = plant, post = s.post.p / POST_UP;
-  const slack = 12 - 3 * post;
-  const held = s.work.where === "mold" || (s.work.where === "ldr" && s.ldr.x.p > 149.7 && s.ldr.z.p > CARRY - 0.3);
-  let r = slack;
-  if (s.pBlad < 0) r = slack * (1 + 0.5 * s.pBlad);
-  else r = slack + ((held ? 18.3 : 14.5) - slack) * sat(s.pBlad / 0.4);
-  return { r, h: 16 + s.post.p };
+function bladderShape(v, where, ldrX, ldrZ) {
+  const post = v["Motion.PostPos"], pBlad = v["Motion.BladderBar"];
+  const slack = 12 - 3 * (post / POST_UP);
+  const held = where === "mold" || (where === "ldr" && ldrX > 149.7 && ldrZ > CARRY - 0.3);
+  const r = pBlad < 0 ? slack * (1 + 0.5 * pBlad) : slack + ((held ? 18.3 : 14.5) - slack) * sat(pBlad / 0.4);
+  return { r, h: 16 + post };
 }
 function draw(dt) {
-  const s = plant;
-  const [lx, ly] = axisVector(P, [0, 0, s.lift.p]);
+  const v = V;
+  if (!v) { const text = waitingText(); if (els.readout.textContent !== text) els.readout.textContent = text; return; }
+  const lift = v["Motion.LiftPos"], ldr = { x: v["Motion.LoaderX"], z: v["Motion.LoaderZ"], grip: v["Motion.LoaderGrip"] }, unl = { x: v["Motion.UnloaderX"], z: v["Motion.UnloaderZ"], grip: v["Motion.UnloaderGrip"] };
+  const [lx, ly] = axisVector(P, [0, 0, lift]);
   const lifted = `translate(${lx.toFixed(2)} ${ly.toFixed(2)})`;
   els.upper.setAttribute("transform", lifted); els.beam.setAttribute("transform", lifted);
   for (const rod of els.rods) { rod.setAttribute("transform", lifted); holdStill(rod, [+lx.toFixed(2), +ly.toFixed(2)]); }
-  const lx0 = STAND_X + s.ldr.x.p, ux0 = CONV_X - s.unl.x.p;
-  move(els.ldrCar, [lx0, 0, 0]); move(els.ldrArm, [lx0, 0, -s.ldr.z.p]);
-  move(els.unlCar, [ux0, 0, 0]); move(els.unlArm, [ux0, 0, -s.unl.z.p]);
-  for (const [list, unit] of [[ldrFingers, s.ldr], [unlFingers, s.unl]]) for (const f of list) move(f.el, [Math.cos(f.angle) * 3.4 * unit.grip, Math.sin(f.angle) * 3.4 * unit.grip, 0]);
+  const lx0 = STAND_X + ldr.x, ux0 = CONV_X - unl.x;
+  move(els.ldrCar, [lx0, 0, 0]); move(els.ldrArm, [lx0, 0, -ldr.z]);
+  move(els.unlCar, [ux0, 0, 0]); move(els.unlArm, [ux0, 0, -unl.z]);
+  for (const [list, unit] of [[ldrFingers, ldr], [unlFingers, unl]]) for (const f of list) move(f.el, [Math.cos(f.angle) * 3.4 * unit.grip, Math.sin(f.angle) * 3.4 * unit.grip, 0]);
   // tires
-  flag(els.tireStand, "data-gone", !s.stand.present);
-  const where = s.work.where;
+  flag(els.tireStand, "data-gone", !v["Motion.StandTire"]);
+  const where = WHERE[v["Motion.WorkTire"]] || "none";
   show(els.tireWork, where !== "none");
   let atPress = false;
   if (where !== "none") {
-    const at = where === "ldr" ? [lx0, 0, CARRY - s.ldr.z.p] : where === "unl" ? [ux0, 0, CARRY - s.unl.z.p] : [0, 0, 0];
+    const at = where === "ldr" ? [lx0, 0, CARRY - ldr.z] : where === "unl" ? [ux0, 0, CARRY - unl.z] : [0, 0, 0];
     atPress = Math.abs(at[0]) < 0.3;
     move(els.tireWork, at);
     els.hole.setAttribute("transform", translateAlong(P, at));
-    show(green, !s.work.cured); show(cured, s.work.cured);
+    show(green, !v["Motion.WorkCured"]); show(cured, Boolean(v["Motion.WorkCured"]));
     if (atPress) els.tireClip.setAttribute("clip-path", "url(#tp-cavity)"); else els.tireClip.removeAttribute("clip-path");
   }
-  show(els.tireOut, s.out.present);
-  if (s.out.present) { move(els.tireOut, [CONV_X + s.out.x, 0, 0]); els.tireOut.style.opacity = s.out.alpha.toFixed(2); }
+  show(els.tireOut, Boolean(v["Motion.OutTire"]));
+  if (v["Motion.OutTire"]) { move(els.tireOut, [CONV_X + v["Motion.OutX"], 0, 0]); els.tireOut.style.opacity = sat(v["Motion.OutAlpha"]).toFixed(2); }
   // bladder: rebuilt only when its shape changes
-  const want = bladderShape();
-  const b = s.bladder;
+  const want = bladderShape(v, where, ldr.x, ldr.z);
   const k = still.matches ? 1 : 1 - Math.exp(-dt / 0.18);
-  b.r += (want.r - b.r) * k; b.h = want.h;
-  const key = b.r.toFixed(2) + "/" + b.h.toFixed(2);
+  bladder.r += (want.r - bladder.r) * k; bladder.h = want.h;
+  const key = bladder.r.toFixed(2) + "/" + bladder.h.toFixed(2);
   if (key !== bladderKey) {
     bladderKey = key;
-    const art = solidSvg(cylinder(0, 0, b.r, SEAT, b.h, P, 48, 0.5), { tone: "hi", crease: "lo" }) + lineSvg(ring(0, 0, Math.max(2, b.r - 2.2), SEAT + b.h, P, 40), { tone: "lo" }) +
-      solidSvg(cylinder(0, 0, 8.6, SEAT + b.h, 2.6, P, 32, 0.4), { tone: "mid" }) + solidSvg(cylinder(0, 0, 3, SEAT + b.h + 2.6, 1.6, P, 16), { tone: "mid" });
+    const art = solidSvg(cylinder(0, 0, bladder.r, SEAT, bladder.h, P, 48, 0.5), { tone: "hi", crease: "lo" }) + lineSvg(ring(0, 0, Math.max(2, bladder.r - 2.2), SEAT + bladder.h, P, 40), { tone: "lo" }) +
+      solidSvg(cylinder(0, 0, 8.6, SEAT + bladder.h, 2.6, P, 32, 0.4), { tone: "mid" }) + solidSvg(cylinder(0, 0, 3, SEAT + bladder.h + 2.6, 1.6, P, 16), { tone: "mid" });
     els.bladderA.innerHTML = art; els.bladderB.innerHTML = art;
   }
   show(els.bladderB, atPress);
   // lamps: one per input, output and valve
-  const I = plc.I, Q = plc.Q;
-  for (const [addr, name] of DI) setLed(addr, I[name]);
-  for (const [addr, name] of DO) setLed(addr, Q[name]);
+  const i = I(v), q = Q(v), a = A(v);
+  for (const [addr, name] of DI) setLed(addr, i[name]);
+  for (const [addr, name] of DO) setLed(addr, q[name]);
   for (const [addr] of AI) setLed(addr, true);
   for (const [addr] of AO) setLed(addr, true);
-  setLed("PS", true); setLed("RUN", !plc.fault); setLed("ERR", Boolean(plc.fault) || plc.hold); setLed("SCAN", Math.floor(performance.now() / 160) % 2 === 0);
-  const valve = { TCV: plc.AQ.TCV_PLATEN > 3, SHAPE: Q.V_SHAPE, STEAM: Q.V_STEAM, N2: Q.V_N2, EXH: Q.V_EXH, VAC: Q.V_VAC };
+  const faulted = Boolean(v["PLC.Faulted"]), hold = Boolean(v["PLC.SafetyHold"]);
+  setLed("PS", true); setLed("RUN", !faulted); setLed("ERR", faulted || hold); setLed("SCAN", Math.floor(performance.now() / 160) % 2 === 0);
+  const valve = { TCV: (v["IO.AO.TCV_PLATEN"] || 0) > 3, SHAPE: q.V_SHAPE, STEAM: q.V_STEAM, N2: q.V_N2, EXH: q.V_EXH, VAC: q.V_VAC };
   for (const name of DATA.valves) { setLed("V." + name, valve[name]); flag(flows.get(name), "data-on", valve[name]); }
-  for (const [name, el] of lamps) flag(el, "data-on", Q["LAMP_" + name]);
-  flag(els.svg, "data-estop", ui.estop);
-  // readout: phase word and numbers from the same scan
-  const st = STEPS[plc.step];
+  for (const [name, el] of lamps) flag(el, "data-on", q["LAMP_" + name]);
+  flag(els.svg, "data-estop", Boolean(v["Cmd.EStop"]));
+  // readout: phase word and numbers from the same publication
+  const step = v["PLC.Step"], st = STEPS[step] || STEPS[0], t = v["PLC.StepTimeS"], r = activeRecipe(v);
   let text;
-  if (plc.fault) text = "fault · step " + plc.step + " " + st.name;
-  else if (plc.hold) text = "held · step " + plc.step + " " + st.name;
-  else if (plc.step === 0) text = plc.run ? "ready · waiting for " + (plc.waiting || "start") : "stopped · press open";
-  else if (plc.step === 12 || plc.step === 13) text = `${st.name} · ${plc.A.PT_BLAD.toFixed(1)} bar · ${Math.round(plc.A.TT_BLAD)} °C · ${Math.max(0, Math.ceil((plc.step === 12 ? plc.r.steamT : plc.r.n2T) - plc.t))} s left`;
-  else if (plc.step === 11) text = `${st.name} · ${Math.max(0, Math.round(plc.A.PT_HYD * KN_PER_BAR))} kN`;
-  else text = `step ${plc.step} ${st.name} · ${plc.A.PT_BLAD.toFixed(2)} bar`;
+  if (faulted) text = "fault · step " + step + " " + st.name;
+  else if (hold) text = "held · step " + step + " " + st.name;
+  else if (step === 0) text = v["PLC.RunLatched"] ? "ready · waiting for " + (v["PLC.Waiting"] || "start") : "stopped · press open";
+  else if (step === 12 || step === 13) text = `${st.name} · ${a.PT_BLAD.toFixed(1)} bar · ${Math.round(a.TT_BLAD)} °C · ${Math.max(0, Math.ceil((step === 12 ? r.steamT : r.n2T) - t))} s left`;
+  else if (step === 11) text = `${st.name} · ${Math.max(0, Math.round(a.PT_HYD * KN_PER_BAR))} kN`;
+  else text = `step ${step} ${st.name} · ${fixed(a.PT_BLAD, 2)} bar`;
+  if (stale()) text = "no fresh data · last " + text;
   if (focus) text = focusName + " · " + text;
   if (els.readout.textContent !== text) els.readout.textContent = text;
 }
@@ -1443,6 +2002,33 @@ function setLed(key, on) {
   ledState.set(key, on);
   for (const el of leds.get(key) || []) flag(el, "data-on", on);
   for (const el of ioCells.get(key) || []) flag(el, "data-on", on);
+}
+
+// ---- link status -----------------------------------------------------------------------
+const readTopic = () => (link.topics ? link.topics.data.replace(/\/\+$/, "") : `ie/d/j/simatic/v1/${link.connector}/dp/r/${link.connection}`);
+const stale = () => DATA.mode === "databus" && Date.now() - link.lastDataMs > 5000;
+function waitingText() {
+  if (DATA.mode !== "databus") return "starting";
+  if (!link.server) return "HMI server unreachable";
+  if (!link.connected) return "connecting to the databus";
+  if (!link.metadata) return "waiting for metadata · " + `ie/m/j/simatic/v1/${link.connector}/dp`;
+  return "waiting for data · " + readTopic();
+}
+function paintLink() {
+  const el = $("[data-link]");
+  let level = "ok", text;
+  if (DATA.mode !== "databus") { level = "local"; text = "Local simulation · no databus"; }
+  else if (!link.server) { level = "bad"; text = "HMI server unreachable"; }
+  else if (!link.connected) { level = "bad"; text = "Databus disconnected" + (link.lastError ? " · " + link.lastError : ""); }
+  else if (!link.metadata) { level = "warn"; text = `Databus · waiting for ${link.connector} metadata`; }
+  else if (!to || stale()) { level = "warn"; text = `Databus · no data from ${link.connector}/${link.connection}`; }
+  else text = `Databus · ${link.connector}/${link.connection} · live`;
+  el.dataset.level = level;
+  el.title = DATA.mode === "databus" ? `${link.broker || "databus"} · ${readTopic()}/…` : "This page runs the simulation model itself.";
+  if (el.lastChild.textContent !== text) el.lastChild.textContent = text;
+  $("[data-source-note]").textContent = DATA.mode === "databus"
+    ? `The PLC program and the plant model run in a Flow Creator flow on the Industrial Edge device. This page draws only what arrives on the Databus under ${readTopic()} and writes operator commands back as tag writes.`
+    : "This standalone copy runs the same model in the page; deployed on Industrial Edge, it runs in Flow Creator and this page reads it from the Databus.";
 }
 
 // ---- anatomy: parts and their explanations -------------------------------------------------
@@ -1459,7 +2045,7 @@ const PARTS = [
   ["unloader", "Unloader", "The loader's twin. It lifts the cured tire out of the bottom mold half and sets it on the conveyor."],
   ["conveyor", "Discharge conveyor", "Driven rollers that take the hot tire away. A photo-eye (PE_CONV) sees it leave."],
   ["valves", "Valve station", "Six valves between the plant headers and the press: platen steam (modulating), shaping steam, cure steam, nitrogen, exhaust and vacuum. A lamp on each actuator shows it open, and dashes run along its pipe."],
-  ["panel", "PLC panel", "Power supply, CPU, three input cards, three output cards and two analog cards on a rail, above the terminals. Every lamp on a card is the real state of one input or output in this page; the stack light and emergency stop sit beside them."],
+  ["panel", "PLC panel", "Power supply, CPU, three input cards, three output cards and two analog cards on a rail, above the terminals. Every lamp on a card is the state of one input or output as published on the Databus; the stack light and emergency stop sit beside them."],
 ];
 let focus = null, focusName = "", pinned = null;
 const pieceEls = $$("[data-piece]");
@@ -1494,8 +2080,7 @@ els.stage.addEventListener("keydown", (event) => {
   pinned = PARTS[next][0]; setFocus(pinned);
 });
 
-// ---- panels ----------------------------------------------------------------------------
-const panels = { stepDirty: true, alarmsDirty: true, cyclesDirty: false };
+// ---- panels and controls ---------------------------------------------------------------
 const ioCells = new Map();
 const ioTable = (list) => list.map(([addr, name, text]) => `<tr title="${text}"><td><i class="tp-dot" data-cell="${addr}"></i></td><td>${addr}</td><td>${name}</td></tr>`).join("");
 $("[data-di]").innerHTML = `<caption>Inputs</caption>` + ioTable(DI);
@@ -1504,30 +2089,84 @@ for (const el of $$("[data-cell]")) { if (!ioCells.has(el.dataset.cell)) ioCells
 $("[data-analog]").innerHTML = [...AI, ...AO].map(([addr, name, text, unit]) => `<tr title="${text}"><td>${addr}</td><td>${name}</td><td class="tp-num" data-analog-value="${name}">–</td><td>${unit}</td></tr>`).join("");
 $("[data-steps]").innerHTML = STEPS.map((step, index) => `<li data-step="${index}"><i>${String(index).padStart(2, "0")}</i><span>${step.name}</span><em>${step.phase}</em></li>`).join("");
 $("[data-phases]").innerHTML = PHASES.map(([name, text], index) => `<div class="tp-phase" data-phase="${name}"><i>${index + 1}</i><b>${name}</b><p>${text}</p></div>`).join("");
-$("[data-recipe]").innerHTML = recipeDefs.map(([key, label, min, max, step, unit]) => `<label class="tp-slider"><span>${label}</span><input type="range" min="${min}" max="${max}" step="${step}" value="${ui.recipe[key]}" data-recipe-key="${key}"><output>${ui.recipe[key]} ${unit}</output></label>`).join("");
-for (const input of $$("[data-recipe-key]")) input.addEventListener("input", () => { ui.recipe[input.dataset.recipeKey] = Number(input.value); input.nextElementSibling.textContent = `${input.value} ${recipeDefs.find(([key]) => key === input.dataset.recipeKey)[5]}`; });
-$("[data-faults]").innerHTML = faultDefs.map(([key, label, text]) => `<label class="tp-fault"><input type="checkbox" data-fault="${key}"><span><b>${label}</b><small>${text}</small></span></label>`).join("");
-for (const input of $$("[data-fault]")) input.addEventListener("change", () => { ui.faults[input.dataset.fault] = input.checked; });
-for (const seg of $$("[data-seg]")) {
-  const key = seg.dataset.seg;
-  const paint = () => $$("button", seg).forEach((button) => button.setAttribute("aria-pressed", String(String(ui[key]) === button.dataset.v)));
-  seg.addEventListener("click", (event) => { const button = event.target.closest("button"); if (!button) return; ui[key] = key === "warp" ? Number(button.dataset.v) : button.dataset.v; paint(); });
-  paint();
+$("[data-recipe]").innerHTML = RECIPE.map(([key, tag, label, min, max, step, unit]) => `<label class="tp-slider"><span>${label}</span><input type="range" min="${min}" max="${max}" step="${step}" value="${NOMINAL[key]}" data-recipe-key="${tag}" data-unit="${unit}"><output>${NOMINAL[key]} ${unit}</output></label>`).join("");
+$("[data-faults]").innerHTML = FAULTS.map(([, tag, label, text]) => `<label class="tp-fault"><input type="checkbox" data-fault="${tag}"><span><b>${label}</b><small>${text}</small></span></label>`).join("");
+$("[data-anomaly-pick]").innerHTML = ANOMALIES.map((a) => `<option value="${a.code}">${a.code} · ${esc(a.label)}</option>`).join("");
+const anomalyText = $("[data-anomaly-text]");
+const pickedAnomaly = () => ANOMALIES.find((a) => a.code === Number($("[data-anomaly-pick]").value));
+$("[data-anomaly-pick]").addEventListener("change", () => { anomalyText.textContent = pickedAnomaly().text; });
+anomalyText.textContent = ANOMALIES[0].text;
+
+// a control the operator is moving keeps their value until the tag reads it back, or for 4 s
+const editing = new Map();
+const busy = (el) => editing.has(el) && Date.now() - editing.get(el) < 4000;
+for (const input of $$("[data-recipe-key]")) {
+  const label = () => { input.nextElementSibling.textContent = `${input.value} ${input.dataset.unit}`; };
+  input.addEventListener("input", () => { editing.set(input, Date.now()); label(); });
+  input.addEventListener("change", () => { editing.set(input, Date.now()); label(); write({ [`Cmd.Recipe.${input.dataset.recipeKey}`]: Number(input.value) }); });
 }
-const pulses = {};
+for (const input of $$("[data-fault]")) input.addEventListener("change", () => { editing.set(input, Date.now()); write({ [`Cmd.Fault.${input.dataset.fault}`]: input.checked }); });
+$("[data-anomaly-random]").addEventListener("change", (event) => { editing.set(event.target, Date.now()); write({ "Cmd.Anomaly.RandomEnabled": event.target.checked }); });
+const SEGS = { mode: "Cmd.Mode", warp: "Cmd.CureWarp", gap: "Cmd.Anomaly.MeanIntervalMin" };
+for (const seg of $$("[data-seg]")) seg.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  editing.set(seg, Date.now());
+  $$("button", seg).forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
+  write({ [SEGS[seg.dataset.seg]]: Number(button.dataset.v) });
+});
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-act]");
   if (!button) return;
   const act = button.dataset.act;
-  if (act === "start" || act === "stop" || act === "reset") pulses[act] = 3;
-  if (act === "estop") { ui.estop = !ui.estop; button.setAttribute("aria-pressed", String(ui.estop)); button.textContent = ui.estop ? "Release E-stop" : "E-stop"; }
+  if (act === "start") write({ "Cmd.Start": true });
+  if (act === "stop") write({ "Cmd.Stop": true });
+  if (act === "reset") write({ "Cmd.Reset": true });
+  if (act === "estop") write({ "Cmd.EStop": !live["Cmd.EStop"] });
+  if (act === "inject") write({ "Cmd.Anomaly.Inject": Number($("[data-anomaly-pick]").value) });
+  if (act === "clear-anomaly") write({ "Cmd.Anomaly.Clear": true });
   if (act === "theme") { const light = document.body.dataset.theme !== "light"; document.body.dataset.theme = light ? "light" : "dark"; button.textContent = light ? "Dark" : "Light"; chartsDirty = true; }
   if (act === "csv") download("tcp01-process.csv", toCsv(COLUMNS, rows));
   if (act === "cycles") download("tcp01-cycles.csv", toCsv(CYCLE_COLUMNS, cycles.map(cycleRow)));
-  if (act === "json") download("tcp01-data.json", JSON.stringify({ machine: "TCP-01", note: "simulated data", exported: new Date().toISOString(), columns: COLUMNS, rows, cycles: cycles.map((c) => Object.fromEntries(CYCLE_COLUMNS.map((key, i) => [key, cycleRow(c)[i]]))) }), "application/json");
+  if (act === "json") download("tcp01-data.json", JSON.stringify({ machine: "TCP-01", note: "simulated data as received by this browser", source: DATA.mode === "databus" ? readTopic() : "local", exported: new Date().toISOString(), columns: COLUMNS, rows, cycles: cycles.map((c) => Object.fromEntries(CYCLE_COLUMNS.map((key, i) => [key, cycleRow(c)[i]]))) }), "application/json");
 });
-const CYCLE_COLUMNS = ["cycle", "serial", "start", "end", "cycle_time_s", "p_max_bar", "platen_mean_c", "squeeze_min_kn", "cure_index_pct", "result", "reason", "alarms", "sp_platen_c", "sp_steam_s", "sp_n2_s", "sp_n2_bar", "sp_squeeze_kn"];
-const cycleRow = (c) => [c.n, c.serial, new Date(wallOf(c.start)).toISOString(), new Date(wallOf(c.end)).toISOString(), Math.round(c.cycleTime), +c.pMax.toFixed(2), +c.platen.toFixed(1), Math.round(c.fMin), +c.cure.toFixed(1), c.ok ? "OK" : "NOK", c.reason, c.alarms.join(" "), c.recipe.platenSP, c.recipe.steamT, c.recipe.n2T, c.recipe.n2P, c.recipe.squeezeSP];
+// controls follow the Command tags, so every HMI on the bus shows the same settings
+function paintControls(force) {
+  const v = live, can = (name) => writable.has(name) && link.writesEnabled !== false;
+  for (const input of $$("[data-recipe-key]")) {
+    const name = `Cmd.Recipe.${input.dataset.recipeKey}`;
+    input.disabled = !can(name);
+    if (v[name] === undefined || (busy(input) && Number(input.value) !== v[name])) continue;
+    editing.delete(input);
+    if (Number(input.value) !== v[name] || force) { input.value = v[name]; input.nextElementSibling.textContent = `${v[name]} ${input.dataset.unit}`; }
+  }
+  for (const input of $$("[data-fault]")) {
+    const name = `Cmd.Fault.${input.dataset.fault}`;
+    input.disabled = !can(name);
+    if (v[name] !== undefined && !(busy(input) && input.checked !== v[name])) { editing.delete(input); input.checked = v[name]; }
+  }
+  const random = $("[data-anomaly-random]");
+  random.disabled = !can("Cmd.Anomaly.RandomEnabled");
+  if (v["Cmd.Anomaly.RandomEnabled"] !== undefined && !(busy(random) && random.checked !== v["Cmd.Anomaly.RandomEnabled"])) { editing.delete(random); random.checked = v["Cmd.Anomaly.RandomEnabled"]; }
+  for (const seg of $$("[data-seg]")) {
+    const name = SEGS[seg.dataset.seg], value = v[name];
+    for (const button of $$("button", seg)) button.disabled = !can(name);
+    if (value === undefined || (busy(seg) && !$$("button", seg).some((b) => b.getAttribute("aria-pressed") === "true" && Number(b.dataset.v) === value))) continue;
+    editing.delete(seg);
+    $$("button", seg).forEach((button) => button.setAttribute("aria-pressed", String(Number(button.dataset.v) === value)));
+  }
+  for (const button of $$("[data-act]")) {
+    const tag = { start: "Cmd.Start", stop: "Cmd.Stop", reset: "Cmd.Reset", estop: "Cmd.EStop", inject: "Cmd.Anomaly.Inject", "clear-anomaly": "Cmd.Anomaly.Clear" }[button.dataset.act];
+    if (tag) button.disabled = !can(tag);
+  }
+  $("[data-anomaly-pick]").disabled = !can("Cmd.Anomaly.Inject");
+  const estop = $('[data-act="estop"]'), pressed = Boolean(v["Cmd.EStop"]);
+  estop.setAttribute("aria-pressed", String(pressed));
+  estop.textContent = pressed ? "Release E-stop" : "E-stop";
+}
+
+const CYCLE_COLUMNS = ["cycle", "serial", "start", "end", "cycle_time_s", "p_max_bar", "platen_mean_c", "squeeze_min_kn", "cure_index_pct", "result", "reason", "alarms", "anomalies", "sp_platen_c", "sp_steam_s", "sp_n2_s", "sp_n2_bar", "sp_squeeze_kn"];
+const cycleRow = (c) => [c.n, c.serial, c.start, c.end, Math.round(c.cycleTime), +Number(c.pMax).toFixed(2), +Number(c.platen).toFixed(1), Math.round(c.fMin), +Number(c.cure).toFixed(1), c.ok ? "OK" : "NOK", c.reason, c.alarms, c.anomalies, c.recipe.platenSP, c.recipe.steamT, c.recipe.n2T, c.recipe.n2P, c.recipe.squeezeSP];
 const toCsv = (columns, list) => [columns.join(","), ...list.map((row) => row.map((value) => (typeof value === "string" && /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value)).join(","))].join("\n");
 // inside an artifact the viewer's frame blocks downloads, so the export buttons copy instead
 const copyOut = document.createElement("textarea");
@@ -1535,53 +2174,78 @@ copyOut.className = "tp-copy"; copyOut.readOnly = true; copyOut.hidden = true; c
 if (DATA.artifact) { $(".tp-export").after(copyOut); for (const button of $$(".tp-export .tp-btn")) button.textContent = button.textContent.replace("Download", "Copy"); }
 function download(name, text, type = "text/csv") {
   if (DATA.artifact) {
-    const say = (note) => { $("[data-rows]").textContent = note; };
+    const say = (message) => { $("[data-rows]").textContent = message; };
     const fallback = () => { copyOut.hidden = false; copyOut.value = text; copyOut.focus(); copyOut.select(); say("select all and copy from the box below"); };
     try { navigator.clipboard.writeText(text).then(() => say(`copied ${name} to the clipboard`), fallback); } catch { fallback(); }
     return;
   }
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(new Blob([text], { type }));
-  link.download = name;
-  document.body.append(link); link.click(); link.remove();
-  setTimeout(() => URL.revokeObjectURL(link.href), 2000);
+  const anchor = document.createElement("a");
+  anchor.href = URL.createObjectURL(new Blob([text], { type }));
+  anchor.download = name;
+  document.body.append(anchor); anchor.click(); anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(anchor.href), 2000);
 }
-const hms = (t) => { const s = Math.floor(t); return [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60].map((v) => String(v).padStart(2, "0")).join(":"); };
+const fixed = (value, digits) => { const text = Number(value || 0).toFixed(digits); return /^-0(\.0+)?$/.test(text) ? text.slice(1) : text; };
+const hms = (t) => { const s = Math.floor(t); return [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60].map((n) => String(n).padStart(2, "0")).join(":"); };
 const stepEls = $$("[data-step]"), phaseEls = $$("[data-phase]"), analogEls = new Map($$("[data-analog-value]").map((el) => [el.dataset.analogValue, el]));
+const anomalyDef = (code) => ANOMALIES.find((a) => a.code === code);
 function paintPanels() {
-  const st = STEPS[plc.step];
-  $("[data-clock]").textContent = hms(simT);
-  $("[data-rows]").textContent = rows.length.toLocaleString("en") + " rows · 1 per second";
-  $("[data-step-time]").textContent = `step ${plc.step} · ${plc.t.toFixed(1)} s`;
-  const state = plc.fault ? "Fault" : plc.hold ? "Held" : plc.run ? (plc.step === 0 ? "Ready" : "Running") : "Stopped";
-  $("[data-state]").textContent = `${state} · ${st.name}`;
-  $("[data-state-sub]").textContent = plc.fault ? plc.fault + ". Clear the cause, then Reset." : plc.hold ? (plc.I.ESTOP_OK && plc.I.GUARD_OK ? "Safety chain healthy again. Press Reset." : "Safety chain open. Motion outputs are off.") : plc.step === 0 && plc.run && plc.waiting ? "Waiting for " + plc.waiting : plc.stopReq && plc.run ? "Stopping at the end of this cycle" : `Cycle ${plc.cycles} · ${ui.mode === "auto" ? "automatic" : "single cycle"}`;
-  for (const lamp of $$("[data-lamp-ui]")) flag(lamp, "data-on", plc.Q["LAMP_" + lamp.dataset.lampUi]);
-  for (const [, name, , , digits] of AI) analogEls.get(name).textContent = plc.A[name].toFixed(digits);
-  for (const [, name, , , digits] of AO) analogEls.get(name).textContent = plc.AQ[name].toFixed(digits);
-  // the active step's transition, term by term
-  const c = { I: plc.I, A: plc.A, t: plc.t, run: plc.run, r: plc.r };
-  $("[data-logic]").innerHTML = `<div class="tp-logic-row"><span>Step</span><b>${String(plc.step).padStart(2, "0")} ${st.name}</b></div><div class="tp-logic-row"><span>Sets</span><b>${st.out.length ? st.out.map((name) => `<code${plc.Q[name] ? " data-on" : ""}>${name}</code>`).join(" ") : "nothing"}</b></div><div class="tp-logic-row"><span>Leaves when</span><b>${st.when.map((term) => `<code class="tp-term"${term.test(c) ? " data-on" : ""}>${term.label}</code>`).join("<em>AND</em>")}</b></div>${st.limit ? `<div class="tp-logic-row"><span>Watchdog</span><b>${plc.t.toFixed(1)} / ${st.limit} s</b></div>` : `<div class="tp-logic-row"><span>Watchdog</span><b>${st.process ? "process step: runs through a hold" : "none"}</b></div>`}`;
+  paintControls(false);
+  paintAnomaly();
+  const v = V;
+  if (!v) return;
+  const step = v["PLC.Step"], st = STEPS[step] || STEPS[0], faulted = Boolean(v["PLC.Faulted"]), hold = Boolean(v["PLC.SafetyHold"]), run = Boolean(v["PLC.RunLatched"]);
+  const i = I(v), a = A(v), q = Q(v);
+  $("[data-clock]").textContent = hms(v["Info.ProcessSeconds"] || 0);
+  $("[data-rows]").textContent = rows.length.toLocaleString("en") + " rows · 1 per process second";
+  $("[data-step-time]").textContent = `step ${step} · ${Number(v["PLC.StepTimeS"]).toFixed(1)} s`;
+  $("[data-state]").textContent = `${PLC_STATES[v["PLC.State"]] || "—"} · ${st.name}`;
+  $("[data-state-sub]").textContent = faulted ? v["PLC.FaultText"] + ". Clear the cause, then Reset." : hold ? (i.ESTOP_OK && i.GUARD_OK ? "Safety chain healthy again. Press Reset." : "Safety chain open. Motion outputs are off.") : step === 0 && run && v["PLC.Waiting"] ? "Waiting for " + v["PLC.Waiting"] : v["PLC.StopRequested"] && run ? "Stopping at the end of this cycle" : `Cycle ${v["PLC.CycleNumber"]} · ${v["Cmd.Mode"] === 1 ? "single cycle" : "automatic"}`;
+  for (const lamp of $$("[data-lamp-ui]")) flag(lamp, "data-on", q["LAMP_" + lamp.dataset.lampUi]);
+  for (const [, name, , , digits] of AI) analogEls.get(name).textContent = fixed(a[name], digits);
+  for (const [, name, , , digits] of AO) analogEls.get(name).textContent = fixed(v["IO.AO." + name], digits);
+  // the active step's transition, term by term, evaluated on the published inputs
+  const c = { I: i, A: a, t: v["PLC.StepTimeS"], run, r: activeRecipe(v) };
+  $("[data-logic]").innerHTML = `<div class="tp-logic-row"><span>Step</span><b>${String(step).padStart(2, "0")} ${st.name}</b></div><div class="tp-logic-row"><span>Sets</span><b>${st.out.length ? st.out.map((name) => `<code${q[name] ? " data-on" : ""}>${name}</code>`).join(" ") : "nothing"}</b></div><div class="tp-logic-row"><span>Leaves when</span><b>${st.when.map((term) => `<code class="tp-term"${term.test(c) ? " data-on" : ""}>${term.label}</code>`).join("<em>AND</em>")}</b></div>${st.limit ? `<div class="tp-logic-row"><span>Watchdog</span><b>${Number(v["PLC.StepTimeS"]).toFixed(1)} / ${st.limit} s</b></div>` : `<div class="tp-logic-row"><span>Watchdog</span><b>${st.process ? "process step: runs through a hold" : "none"}</b></div>`}`;
+  if (step !== panels.lastStep) { panels.lastStep = step; panels.stepDirty = true; }
   if (panels.stepDirty) {
     panels.stepDirty = false;
-    stepEls.forEach((el, index) => { flag(el, "data-on", index === plc.step); flag(el, "data-done", index < plc.step); });
-    phaseEls.forEach((el) => flag(el, "data-on", el.dataset.phase === st.phase && (plc.run || plc.step > 0)));
-    const active = stepEls[plc.step], list = active.parentElement;
+    stepEls.forEach((el, index) => { flag(el, "data-on", index === step); flag(el, "data-done", index < step); });
+    phaseEls.forEach((el) => flag(el, "data-on", el.dataset.phase === st.phase && (run || step > 0)));
+    const active = stepEls[step], list = active.parentElement;
     list.scrollTop = active.offsetTop - list.offsetTop - list.clientHeight / 2 + active.clientHeight / 2;
-    $("[data-now-phase]").textContent = `${st.phase} · step ${plc.step}`;
+    $("[data-now-phase]").textContent = `${st.phase} · step ${step}`;
     $("[data-now-text]").textContent = st.why;
   }
   if (panels.alarmsDirty) {
     panels.alarmsDirty = false;
-    const active = plc.alarms.filter((a) => !a.cleared).length;
+    const active = Number(v["Alarm.ActiveCount"]) || 0;
     $("[data-alarm-count]").textContent = active ? `${active} active` : "none active";
-    $("[data-alarms]").innerHTML = plc.alarms.length ? plc.alarms.slice(0, 8).map((a) => `<li data-level="${a.level}"${a.cleared ? " data-cleared" : ""}><code>${a.code}</code><span>${a.text}</span><time>${hms(a.at)}</time></li>`).join("") : `<li class="tp-empty">No alarms.</li>`;
+    $("[data-alarms]").innerHTML = alarmLog.length ? alarmLog.slice(0, 8).map((x) => `<li data-level="${esc(x.level)}"${x.cleared ? " data-cleared" : ""}><code>${esc(x.code)}</code><span>${esc(x.text)}</span><time>${hms(x.at)}</time></li>`).join("") : `<li class="tp-empty">No alarms.</li>`;
   }
   if (panels.cyclesDirty) {
     panels.cyclesDirty = false;
-    $("[data-cycle-count]").textContent = `${cycles.length} tire${cycles.length === 1 ? "" : "s"} · ${cycles.filter((c) => c.ok).length} OK`;
-    $("[data-cycles]").innerHTML = cycles.slice(-12).reverse().map((c) => `<tr><td>${c.n}</td><td>${c.serial}</td><td>${Math.round(c.cycleTime)} s</td><td>${c.pMax.toFixed(1)} bar</td><td>${c.platen.toFixed(1)} °C</td><td>${c.cure.toFixed(0)} %</td><td data-ok="${c.ok}" title="${c.reason}">${c.ok ? "OK" : "NOK · " + c.reason}</td></tr>`).join("");
+    const total = v["Cycle.Total"] ?? cycles.length, good = v["Cycle.Good"] ?? cycles.filter((x) => x.ok).length;
+    $("[data-cycle-count]").textContent = `${total} tire${total === 1 ? "" : "s"} · ${good} OK`;
+    $("[data-cycles]").innerHTML = cycles.slice(-12).reverse().map((x) => `<tr><td>${x.n}</td><td>${esc(x.serial)}</td><td>${Math.round(x.cycleTime)} s</td><td>${Number(x.pMax).toFixed(1)} bar</td><td>${Number(x.platen).toFixed(1)} °C</td><td>${Number(x.cure).toFixed(0)} %</td><td data-ok="${Boolean(x.ok)}" title="${esc(x.reason)}">${x.ok ? "OK" : "NOK · " + esc(x.reason)}</td><td class="tp-anom">${esc(x.anomalies.replace(/_/g, " ")) || "–"}</td></tr>`).join("");
   }
+}
+function paintAnomaly() {
+  const v = live;
+  if (v["Anomaly.Count"] === undefined) return;
+  $("[data-anomaly-count]").textContent = `${v["Anomaly.Count"]} injected`;
+  const def = anomalyDef(v["Anomaly.TypeCode"]);
+  const truth = $("[data-truth]");
+  truth.dataset.active = String(Boolean(v["Anomaly.Active"]));
+  truth.innerHTML = v["Anomaly.Active"] && def
+    ? `<b>${esc(def.label)}</b><span>severity ${Number(v["Anomaly.Severity"]).toFixed(2)} · ${Math.ceil(v["Anomaly.SecondsRemaining"])} s left</span><small>${esc(def.text)}</small><code>${esc(v["Anomaly.EventId"])}</code>`
+    : `<b>No anomaly active</b><span>${v["Cmd.Anomaly.RandomEnabled"] ? `next one at random, about every ${v["Cmd.Anomaly.MeanIntervalMin"]} min` : "random injection is off"}</span>`;
+  const score = v["AI.AnomalyScore"], statusCode = v["AI.Status"], guess = anomalyDef(v["AI.PredictedType"]);
+  const verdict = [statusCode === undefined ? "" : ["normal", "warning", "alarm"][statusCode] || `status ${statusCode}`, score === undefined ? "" : `score ${score} ‰`, guess ? esc(guess.label) : ""].filter(Boolean);
+  $("[data-ai]").innerHTML = verdict.length
+    ? `<span>AI Inference Server</span><b data-status="${statusCode ?? ""}">${verdict.join(" · ")}</b>`
+    : `<span>AI Inference Server</span><b>no output on ${esc(readTopic())}/AI_0 yet</b>`;
+  $('[data-act="clear-anomaly"]').disabled = !v["Anomaly.Active"] || !writable.has("Cmd.Anomaly.Clear");
 }
 
 // ---- strip charts ----------------------------------------------------------------------
@@ -1598,9 +2262,12 @@ let chartsDirty = true;
 function paintCharts() {
   const style = getComputedStyle(document.body);
   const ink = (name) => style.getPropertyValue("--anatomy-" + name).trim();
-  const t1 = simT, t0 = t1 - WINDOW;
+  const t1 = rows.length ? rows[rows.length - 1][0] : 0, t0 = t1 - WINDOW;
   let first = rows.length;
   while (first > 0 && rows[first - 1][0] >= t0) first--;
+  // shade the stretches where an anomaly was acting: ground truth to compare detections against
+  const spans = [];
+  for (let i = first; i < rows.length; i++) if (rows[i][21]) { if (spans.length && spans[spans.length - 1][1] === i - 1) spans[spans.length - 1][1] = i; else spans.push([i, i]); }
   CHARTS.forEach((chart, index) => {
     const canvas = canvases[index];
     const width = canvas.clientWidth, height = 96, ratio = Math.min(2, devicePixelRatio || 1);
@@ -1610,7 +2277,10 @@ function paintCharts() {
     g.clearRect(0, 0, width, height);
     const left = 34, right = width - 4, top = 6, bottom = height - 14;
     const xOf = (t) => left + ((t - t0) / WINDOW) * (right - left);
-    const yOf = (v) => bottom - ((clamp(v, chart.min, chart.max) - chart.min) / (chart.max - chart.min)) * (bottom - top);
+    const yOf = (value) => bottom - ((clamp(value, chart.min, chart.max) - chart.min) / (chart.max - chart.min)) * (bottom - top);
+    g.fillStyle = ink("red"); g.globalAlpha = 0.12;
+    for (const [s, e] of spans) { const x0 = Math.max(left, xOf(rows[s][0])), x1 = Math.max(x0 + 1, xOf(rows[e][0])); g.fillRect(x0, top, x1 - x0, bottom - top); }
+    g.globalAlpha = 1;
     g.font = "9.5px ui-monospace, Menlo, monospace"; g.textBaseline = "middle"; g.lineWidth = 1;
     for (let i = 0; i <= 2; i++) {
       const value = chart.min + ((chart.max - chart.min) * i) / 2, y = Math.round(yOf(value)) + 0.5;
@@ -1618,7 +2288,7 @@ function paintCharts() {
       g.fillStyle = ink("muted"); g.textAlign = "right"; g.fillText(String(Math.round(value)), left - 5, y);
     }
     g.textAlign = "center"; g.textBaseline = "alphabetic";
-    for (let m = Math.ceil(t0 / 300) * 300; m <= t1; m += 300) if (m >= 0) { const x = Math.round(xOf(m)) + 0.5; g.strokeStyle = ink("faint"); g.beginPath(); g.moveTo(x, top); g.lineTo(x, bottom); g.stroke(); g.fillStyle = ink("muted"); g.fillText(`${m / 60} min`, clamp(x, left + 14, right - 14), height - 2); }
+    for (let m = Math.ceil(t0 / 300) * 300; m <= t1; m += 300) if (m >= 0) { const x = Math.round(xOf(m)) + 0.5; g.strokeStyle = ink("faint"); g.beginPath(); g.moveTo(x, top); g.lineTo(x, bottom); g.stroke(); g.fillStyle = ink("muted"); g.fillText(`${Math.round(m / 60)} min`, clamp(x, left + 14, right - 14), height - 2); }
     const now = [];
     for (const [column, label, tone] of chart.series) {
       g.strokeStyle = ink(tone); g.lineWidth = 1.3; g.lineJoin = "round"; g.beginPath();
@@ -1632,22 +2302,22 @@ function paintCharts() {
 }
 
 // ---- loop ------------------------------------------------------------------------------
-let last = 0, panelAt = 0, chartAt = 0, visible = true;
+let last = 0, panelAt = 0, chartAt = 0, linkAt = 0, visible = true;
 function frame(now) {
   const dt = last ? Math.min((now - last) / 1000, 1 / 20) : 1 / 60;
   last = now;
-  for (const key of Object.keys(pulses)) { if (pulses[key] > 0) { ui.pulse[key] = true; pulses[key] -= 1; } }
-  tick(dt);
+  source.pump();
+  V = view(now);
   draw(dt);
   if (now - panelAt > 110) { panelAt = now; paintPanels(); }
-  if (now - chartAt > 400 || chartsDirty) { chartAt = now; chartsDirty = false; paintCharts(); }
+  if (now - linkAt > 1000) { linkAt = now; paintLink(); }
+  if (chartsDirty && now - chartAt > 400) { chartAt = now; chartsDirty = false; paintCharts(); }
   if (visible) requestAnimationFrame(frame);
 }
 document.addEventListener("visibilitychange", () => { visible = !document.hidden; if (visible) { last = 0; requestAnimationFrame(frame); } });
 addEventListener("resize", () => (chartsDirty = true));
-// the cell starts itself, like an idle tour: the first cycle begins as soon as the page opens
-pulses.start = 3;
-window.__tp = { plc, plant, ui, rows, cycles, STEPS, get simT() { return simT; } };
+paintLink();
+window.__tp = { live, link, rows, cycles, alarmLog, get view() { return V; }, write };
 requestAnimationFrame(frame);
 
 }</script></body></html>

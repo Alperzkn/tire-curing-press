@@ -1,14 +1,40 @@
+# docker compose up -d --build                  HMI only, for a broker you point it at with DATABUS_URL
+# docker compose --profile local up -d --build  HMI plus stand-ins for the IE Databus and Flow Creator
 services:
-  tire-curing-press:
+  hmi:
     build: .
-    image: tire-curing-press:latest
+    image: tire-curing-press-hmi:2.0.0
     ports:
       - "${PORT:-8080}:8080"
+    environment:
+      DATABUS_URL: ${DATABUS_URL:-mqtt://ie-databus:1883}
+      DATABUS_USER: ${DATABUS_USER:-}
+      DATABUS_PASSWORD: ${DATABUS_PASSWORD:-}
+      CONNECTOR: ${CONNECTOR:-tirepress1}
+      CONNECTION: ${CONNECTION:-factory}
+      WRITES_ENABLED: ${WRITES_ENABLED:-true}
     restart: unless-stopped
     read_only: true
-    tmpfs:
-      - /tmp
     cap_drop:
       - ALL
     security_opt:
       - no-new-privileges:true
+
+  # Stand-in for the IE Databus: same host name and port, no authentication.
+  ie-databus:
+    image: eclipse-mosquitto:2.0.22
+    profiles: [local]
+    command: mosquitto -c /mosquitto-no-auth.conf
+    ports:
+      - "${MQTT_PORT:-1883}:1883"
+    restart: unless-stopped
+
+  # Stand-in for Flow Creator: Node-RED running the generated flow unchanged.
+  flow-creator:
+    image: nodered/node-red:4.1.0
+    profiles: [local]
+    volumes:
+      - ./flow/tire-press-flow.json:/data/flows.json:ro
+    ports:
+      - "${NODE_RED_PORT:-1880}:1880"
+    restart: unless-stopped

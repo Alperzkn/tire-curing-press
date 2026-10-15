@@ -1,0 +1,27 @@
+# Compose file for the Industrial Edge App Publisher (IE apps use compose format 2.4 and need mem_limit).
+# Build and push the image first:  docker buildx build --platform linux/amd64 -t <registry>/tire-curing-press-hmi:2.0.0 --push .
+# In the App Publisher, add a reverse-proxy entry: service tire-press-hmi, port 8080, path tire-press/ (keep the trailing slash).
+version: "2.4"
+services:
+  tire-press-hmi:
+    image: tire-curing-press-hmi:2.0.0
+    mem_limit: 128mb
+    restart: unless-stopped
+    environment:
+      DATABUS_URL: mqtt://ie-databus:1883
+      DATABUS_USER: edge            # a Databus user with read on ie/# and write on ie/d/j/simatic/v1/tirepress1/dp/w/#
+      DATABUS_PASSWORD: edge
+      CONNECTOR: tirepress1
+      CONNECTION: factory
+      WRITES_ENABLED: "true"        # "false" makes this HMI read-only
+    networks:
+      - proxy-redirect
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+networks:
+  proxy-redirect:
+    external: true
+    name: proxy-redirect

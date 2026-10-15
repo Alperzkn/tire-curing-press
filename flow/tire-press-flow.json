@@ -1,0 +1,551 @@
+[
+  {
+    "id": "361fb5d0cc2993e8",
+    "type": "tab",
+    "label": "Tire Curing Press TCP-01 - SIMULATION",
+    "disabled": false,
+    "info": "Tire curing press TCP-01 simulation, model 2.0.0.\n\nPublishes SIMATIC v1 bulk payloads like an S7 connector named \"tirepress1\" with connection \"factory\":\n  metadata  ie/m/j/simatic/v1/tirepress1/dp (retained)\n  data      ie/d/j/simatic/v1/tirepress1/dp/r/factory/{Press_0,Cycle_0,Anomaly_0,Command_0} every 500 ms\n  writes    ie/d/j/simatic/v1/tirepress1/dp/w/factory/{Command_0,AI_0}  payload {\"seq\":1,\"vals\":[{\"id\":\"<tag id>\",\"val\":<value>}]}\n\nAfter importing: open the broker node \"ie-databus\" and enter a Databus user that may publish and subscribe to ie/#.\nGive the flow persistent context if counters should survive a restart. One flow instance per connector name.\n\nAnomalies: one random anomaly at a time (mean gap Cmd.Anomaly.MeanIntervalMin, default 10 min, lasting 2-7 min).\nGround truth is on the Anomaly_0 chunk; keep those tags out of detector inputs and use them to score detections.\nAI Inference Server may write TCP01.AI.* on ie/d/j/simatic/v1/tirepress1/dp/w/factory/AI_0; the flow echoes them to ie/d/j/simatic/v1/tirepress1/dp/r/factory/AI_0.\n\nRebuild with: node flow/build-flow.mjs --connector tirepress1 --connection factory",
+    "env": []
+  },
+  {
+    "id": "855e8b6b13fcf285",
+    "type": "comment",
+    "z": "361fb5d0cc2993e8",
+    "name": "Read me: topics, credentials, anomalies",
+    "info": "Tire curing press TCP-01 simulation, model 2.0.0.\n\nPublishes SIMATIC v1 bulk payloads like an S7 connector named \"tirepress1\" with connection \"factory\":\n  metadata  ie/m/j/simatic/v1/tirepress1/dp (retained)\n  data      ie/d/j/simatic/v1/tirepress1/dp/r/factory/{Press_0,Cycle_0,Anomaly_0,Command_0} every 500 ms\n  writes    ie/d/j/simatic/v1/tirepress1/dp/w/factory/{Command_0,AI_0}  payload {\"seq\":1,\"vals\":[{\"id\":\"<tag id>\",\"val\":<value>}]}\n\nAfter importing: open the broker node \"ie-databus\" and enter a Databus user that may publish and subscribe to ie/#.\nGive the flow persistent context if counters should survive a restart. One flow instance per connector name.\n\nAnomalies: one random anomaly at a time (mean gap Cmd.Anomaly.MeanIntervalMin, default 10 min, lasting 2-7 min).\nGround truth is on the Anomaly_0 chunk; keep those tags out of detector inputs and use them to score detections.\nAI Inference Server may write TCP01.AI.* on ie/d/j/simatic/v1/tirepress1/dp/w/factory/AI_0; the flow echoes them to ie/d/j/simatic/v1/tirepress1/dp/r/factory/AI_0.\n\nRebuild with: node flow/build-flow.mjs --connector tirepress1 --connection factory",
+    "x": 230,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "84d2a868383aa09c",
+    "type": "mqtt-broker",
+    "name": "Industrial Edge Databus",
+    "broker": "ie-databus",
+    "port": "1883",
+    "clientid": "tirepress1-sim",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "35840880515bef6a",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "Tick every 500 ms",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "0.5",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 1,
+    "topic": "tcp/tick",
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 120,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "3113f30c05bef7f2",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "Publish metadata",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "60",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.2,
+    "topic": "tcp/metadata",
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 170,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "a837d7be0652b558",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "Start",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.Start\":true}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 240,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "6ee1854626fabe60",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "Cycle stop",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.Stop\":true}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 280,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "7ddc65c1065ee14d",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "Reset",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.Reset\":true}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 320,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "b79b823d1758cda9",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "E-stop press",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.EStop\":true}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 360,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "34ba61f9027281a7",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "E-stop release",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.EStop\":false}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 400,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "382bbb7f4e5de9b3",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "Inject anomaly 1 (edit code 1-8)",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.Anomaly.Inject\":1}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 440,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "91fb94a3d4375175",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "End anomaly",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.Anomaly.Clear\":true}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 480,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "333f83d30b94ea0d",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "Random anomalies on",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.Anomaly.RandomEnabled\":true}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 520,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "520fc4777e322ac3",
+    "type": "inject",
+    "z": "361fb5d0cc2993e8",
+    "name": "Random anomalies off",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "tcp/command",
+    "payload": "{\"TCP01.Cmd.Anomaly.RandomEnabled\":false}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 560,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "3873eb53d5e0eb5b",
+    "type": "mqtt in",
+    "z": "361fb5d0cc2993e8",
+    "name": "Writes from the Databus",
+    "topic": "ie/d/j/simatic/v1/tirepress1/dp/w/factory/+",
+    "qos": "1",
+    "datatype": "auto-detect",
+    "broker": "84d2a868383aa09c",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 170,
+    "y": 640,
+    "wires": [
+      [
+        "5bb7f347be7b27d3"
+      ]
+    ]
+  },
+  {
+    "id": "5bb7f347be7b27d3",
+    "type": "function",
+    "z": "361fb5d0cc2993e8",
+    "name": "Mark as write",
+    "func": "msg.writeTopic = msg.topic;\nmsg.topic = \"tcp/write\";\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 390,
+    "y": 640,
+    "wires": [
+      [
+        "6330b47c5160f094"
+      ]
+    ]
+  },
+  {
+    "id": "7131e28fc0e28c51",
+    "type": "mqtt out",
+    "z": "361fb5d0cc2993e8",
+    "name": "Metadata",
+    "topic": "ie/m/j/simatic/v1/tirepress1/dp",
+    "qos": "1",
+    "retain": "true",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "84d2a868383aa09c",
+    "x": 900,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "a55a50a6971fc2d4",
+    "type": "mqtt out",
+    "z": "361fb5d0cc2993e8",
+    "name": "Data Press_0",
+    "topic": "ie/d/j/simatic/v1/tirepress1/dp/r/factory/Press_0",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "84d2a868383aa09c",
+    "x": 900,
+    "y": 170,
+    "wires": []
+  },
+  {
+    "id": "9b13e0537a35dec3",
+    "type": "mqtt out",
+    "z": "361fb5d0cc2993e8",
+    "name": "Data Cycle_0",
+    "topic": "ie/d/j/simatic/v1/tirepress1/dp/r/factory/Cycle_0",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "84d2a868383aa09c",
+    "x": 900,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "6bfb7078ca45c54a",
+    "type": "mqtt out",
+    "z": "361fb5d0cc2993e8",
+    "name": "Data Anomaly_0",
+    "topic": "ie/d/j/simatic/v1/tirepress1/dp/r/factory/Anomaly_0",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "84d2a868383aa09c",
+    "x": 900,
+    "y": 270,
+    "wires": []
+  },
+  {
+    "id": "461e23d4d0a5d634",
+    "type": "mqtt out",
+    "z": "361fb5d0cc2993e8",
+    "name": "Data Command_0",
+    "topic": "ie/d/j/simatic/v1/tirepress1/dp/r/factory/Command_0",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "84d2a868383aa09c",
+    "x": 900,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "d455e0d7dbe12d37",
+    "type": "mqtt out",
+    "z": "361fb5d0cc2993e8",
+    "name": "Read-back AI_0",
+    "topic": "ie/d/j/simatic/v1/tirepress1/dp/r/factory/AI_0",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "84d2a868383aa09c",
+    "x": 900,
+    "y": 370,
+    "wires": []
+  },
+  {
+    "id": "6330b47c5160f094",
+    "type": "function",
+    "z": "361fb5d0cc2993e8",
+    "name": "Press model, PLC and anomaly publisher",
+    "func": "// Generated by flow/build-flow.mjs from sim/press-model.js 2.0.0. Edit the model and rebuild; do not edit here.\nconst TirePress = (() => {\nconst module = { exports: {} };\nconst exports = module.exports;\n// Tire curing press TCP-01: plant model, PLC program, random anomalies and the SIMATIC v1 tag interface.\n// One source, three hosts: the Flow Creator function node that runs the simulation on Industrial Edge,\n// the HMI page (step logic, tag names, local fallback) and the tests. No DOM, no imports; state is plain JSON\n// so it can live in flow context.\n\"use strict\";\n\nconst VERSION = \"2.0.0\";\nconst CONFIG = {\n  applicationName: \"Tire Curing Press TCP-01 Simulation\",\n  namespace: \"TCP01\",\n  connector: \"tirepress1\", // ie/d/j/simatic/v1/<connector>/dp/r/<connection>/<chunk>\n  connection: \"factory\",\n  publishEveryMs: 500,\n  scanS: 0.05,\n  maxCatchupS: 30, // longer runtime gaps are recorded, not fabricated\n};\nfunction configure(overrides) {\n  for (const key of Object.keys(overrides || {})) if (overrides[key] !== undefined && key in CONFIG) CONFIG[key] = overrides[key];\n  return CONFIG;\n}\n\n// ---- geometry and units ------------------------------------------------------------------\nconst GEOMETRY = { STROKE: 55, CARRY: 23, POST_UP: 22 }; // drawing units\nconst MM = 9; // one drawing unit is about 9 mm\nconst KN_PER_BAR = 7.14; // two squeeze cylinders, 714 cm2 together\nconst { STROKE, CARRY, POST_UP } = GEOMETRY;\n\n// ---- I/O -----------------------------------------------------------------------------------\nconst DI = [\n  [\"I0.0\", \"ESTOP_OK\", \"Emergency stop chain healthy\"], [\"I0.1\", \"GUARD_OK\", \"Guard door closed\"], [\"I0.2\", \"PB_START\", \"Start push button\"],\n  [\"I0.3\", \"PB_STOP\", \"Cycle stop push button\"], [\"I0.4\", \"PB_RESET\", \"Reset push button\"], [\"I0.5\", \"PRESS_OPEN\", \"Beam at top limit\"],\n  [\"I0.6\", \"PRESS_CLOSED\", \"Mold halves together\"], [\"I0.7\", \"PE_STAND\", \"Green tire on the stand\"],\n  [\"I1.0\", \"LDR_HOME\", \"Loader over the stand\"], [\"I1.1\", \"LDR_AT_PRESS\", \"Loader over the mold\"], [\"I1.2\", \"LDR_UP\", \"Loader chuck raised\"],\n  [\"I1.3\", \"LDR_DOWN\", \"Loader chuck lowered\"], [\"I1.4\", \"LDR_GRIPPED\", \"Loader chuck pressure switch\"], [\"I1.5\", \"POST_LOW\", \"Centre post at load height\"],\n  [\"I1.6\", \"POST_HIGH\", \"Centre post at strip height\"], [\"I1.7\", \"PE_CONV\", \"Tire on the conveyor\"],\n  [\"I2.0\", \"UNL_HOME\", \"Unloader over the conveyor\"], [\"I2.1\", \"UNL_AT_PRESS\", \"Unloader over the mold\"], [\"I2.2\", \"UNL_UP\", \"Unloader chuck raised\"],\n  [\"I2.3\", \"UNL_DOWN\", \"Unloader chuck lowered\"], [\"I2.4\", \"UNL_GRIPPED\", \"Unloader chuck pressure switch\"], [\"I2.5\", \"HYD_OK\", \"Hydraulic pressure available\"],\n];\nconst DO = [\n  [\"Q0.0\", \"HYD_PUMP\", \"Hydraulic pump\"], [\"Q0.1\", \"PRESS_UP\", \"Raise the beam\"], [\"Q0.2\", \"PRESS_DN\", \"Lower the beam\"], [\"Q0.3\", \"SQUEEZE\", \"Squeeze cylinders\"],\n  [\"Q0.4\", \"LDR_FWD\", \"Loader toward the press\"], [\"Q0.5\", \"LDR_REV\", \"Loader toward the stand\"], [\"Q0.6\", \"LDR_LOWER\", \"Lower the loader chuck\"], [\"Q0.7\", \"LDR_GRIP\", \"Expand the loader chuck\"],\n  [\"Q1.0\", \"UNL_FWD\", \"Unloader toward the press\"], [\"Q1.1\", \"UNL_REV\", \"Unloader toward the conveyor\"], [\"Q1.2\", \"UNL_LOWER\", \"Lower the unloader chuck\"], [\"Q1.3\", \"UNL_GRIP\", \"Expand the unloader chuck\"],\n  [\"Q1.4\", \"POST_UP\", \"Raise the centre post\"], [\"Q1.5\", \"CONV_RUN\", \"Conveyor motor\"], [\"Q1.6\", \"MOTION_EN\", \"Enable valve for every moving axis\"],\n  [\"Q2.0\", \"V_SHAPE\", \"Shaping steam valve\"], [\"Q2.1\", \"V_STEAM\", \"Cure steam valve\"], [\"Q2.2\", \"V_N2\", \"Nitrogen valve\"], [\"Q2.3\", \"V_EXH\", \"Exhaust valve\"],\n  [\"Q2.4\", \"V_VAC\", \"Vacuum valve\"], [\"Q2.5\", \"LAMP_G\", \"Stack light green\"], [\"Q2.6\", \"LAMP_A\", \"Stack light amber\"], [\"Q2.7\", \"LAMP_R\", \"Stack light red\"],\n];\nconst AI = [\n  [\"AI0\", \"TT_TOP\", \"Top platen temperature\", \"°C\", 1], [\"AI1\", \"TT_BOT\", \"Bottom platen temperature\", \"°C\", 1], [\"AI2\", \"PT_BLAD\", \"Bladder pressure\", \"bar\", 2],\n  [\"AI3\", \"TT_BLAD\", \"Bladder medium temperature\", \"°C\", 1], [\"AI4\", \"PT_HYD\", \"Squeeze pressure\", \"bar\", 0], [\"AI5\", \"ZT_PRESS\", \"Press opening\", \"mm\", 0],\n  [\"AI6\", \"IT_LDR\", \"Loader travel drive current\", \"A\", 2], [\"AI7\", \"IT_UNL\", \"Unloader travel drive current\", \"A\", 2],\n];\nconst AO = [[\"AO0\", \"TCV_PLATEN\", \"Platen steam valve\", \"%\", 0], [\"AO1\", \"PCV_SQZ\", \"Squeeze pressure setpoint\", \"bar\", 0]];\n\n// ---- recipe, manual faults, random anomalies -------------------------------------------------\nconst RECIPE = [\n  [\"platenSP\", \"PlatenSP\", \"Platen temperature\", 150, 190, 1, \"°C\"], [\"steamT\", \"SteamT\", \"Steam time\", 60, 240, 10, \"s\"],\n  [\"n2T\", \"N2T\", \"Nitrogen time\", 180, 720, 30, \"s\"], [\"n2P\", \"N2P\", \"Nitrogen pressure\", 16, 26, 0.5, \"bar\"],\n  [\"squeezeSP\", \"SqueezeSP\", \"Squeeze force\", 1000, 1500, 50, \"kN\"],\n];\nconst NOMINAL = { platenSP: 175, steamT: 120, n2T: 420, n2P: 21, squeezeSP: 1400, shapeSP: 0.5 };\nconst FAULTS = [\n  [\"leak\", \"Leak\", \"Bladder leak\", \"Pressure cannot reach setpoint: low-pressure alarm, tire rejected.\"],\n  [\"sag\", \"Sag\", \"Steam supply sag\", \"Header drops to 9 bar: the steam step runs cold and slow.\"],\n  [\"grip\", \"Grip\", \"Loader pressure switch fails\", \"LDR_GRIPPED never comes: the step watchdog stops the sequence.\"],\n  [\"guard\", \"Guard\", \"Open the guard door\", \"Motion outputs drop at once; an active cure keeps running.\"],\n];\n// Each anomaly acts on the plant or a sensor, never on a published value directly, so its signature\n// propagates through the PLC and the process the way a real one would.\nconst ANOMALIES = [\n  { code: 1, kind: \"bladder_leak\", label: \"Bladder leak\", text: \"A slow leak in the bladder: cure pressure settles below setpoint in the nitrogen step.\" },\n  { code: 2, kind: \"steam_supply_sag\", label: \"Steam supply sag\", text: \"Header pressure drops: cure steam runs low and the platen valve opens further to hold temperature.\" },\n  { code: 3, kind: \"platen_steam_trap\", label: \"Bottom platen steam trap blocked\", text: \"Condensate backs up in the bottom platen: TT_BOT falls, the loop opens the valve and the top platen runs hot.\" },\n  { code: 4, kind: \"hydraulic_leak\", label: \"Hydraulic leak\", text: \"Squeeze pressure builds slowly and settles below its setpoint.\" },\n  { code: 5, kind: \"platen_sensor_drift\", label: \"Top platen sensor drift\", text: \"TT_TOP drifts high; the loop trusts it and cools the real platens, so tires under-cure.\" },\n  { code: 6, kind: \"pressure_sensor_noise\", label: \"Bladder transmitter noise\", text: \"PT_BLAD turns noisy with spikes while the real pressure is fine; spikes can fake alarms.\" },\n  { code: 7, kind: \"loader_drive_friction\", label: \"Loader drive friction\", text: \"The loader carriage drags: slower travel, longer load steps and higher drive current.\" },\n  { code: 8, kind: \"nitrogen_supply_low\", label: \"Nitrogen supply low\", text: \"The nitrogen header cannot reach recipe pressure during the cure.\" },\n];\nconst ANOMALY = { minDurationS: 120, maxDurationS: 420, firstAfterS: [120, 300], minGapS: 60, rampS: 60, severity: [0.35, 1] };\n\n// ---- PLC program ---------------------------------------------------------------------------\n// A step: outputs it energises, the terms that must all be true to leave it, a watchdog, and an explanation.\nconst T = (seconds) => ({ label: `T#${seconds}s in step`, test: (c) => c.t >= seconds });\nconst X = (name) => ({ label: name, io: name, test: (c) => c.I[name] });\nconst N = (name) => ({ label: `NOT ${name}`, io: name, test: (c) => !c.I[name] });\nconst STEPS = [\n  { name: \"READY\", phase: \"Load\", out: [], when: [{ label: \"start latched\", test: (c) => c.run }, X(\"PRESS_OPEN\"), X(\"LDR_HOME\"), X(\"UNL_HOME\"), X(\"POST_LOW\"), X(\"PE_STAND\"), { label: \"platens within 8 °C of setpoint\", test: (c) => Math.abs(c.A.TT_TOP - c.r.platenSP) < 8 && Math.abs(c.A.TT_BOT - c.r.platenSP) < 8 }],\n    why: \"The press waits open. It will not start until a green tire is on the stand, both arms are parked and the platens are up to temperature.\" },\n  { name: \"PICK_LOWER\", phase: \"Load\", out: [\"LDR_LOWER\"], when: [X(\"LDR_DOWN\")], limit: 6, why: \"The loader chuck drops onto the green tire's top bead.\" },\n  { name: \"PICK_GRIP\", phase: \"Load\", out: [\"LDR_LOWER\", \"LDR_GRIP\"], when: [X(\"LDR_GRIPPED\"), T(0.3)], limit: 5, why: \"Six fingers spread under the bead. A pressure switch, not a timer alone, tells the PLC the tire is held.\" },\n  { name: \"PICK_RAISE\", phase: \"Load\", out: [\"LDR_GRIP\"], when: [X(\"LDR_UP\")], limit: 6, why: \"The chuck lifts the tire clear of the stand.\" },\n  { name: \"LOAD_IN\", phase: \"Load\", out: [\"LDR_GRIP\", \"LDR_FWD\"], when: [X(\"LDR_AT_PRESS\")], limit: 10, why: \"The carriage runs along the rail into the open press. The move is interlocked: the beam must be at its top limit and the unloader parked.\" },\n  { name: \"LOAD_LOWER\", phase: \"Load\", out: [\"LDR_GRIP\", \"LDR_LOWER\"], when: [X(\"LDR_DOWN\")], limit: 6, why: \"The tire is lowered over the collapsed bladder into the bottom mold half.\" },\n  { name: \"PRESHAPE\", phase: \"Shape\", out: [\"LDR_GRIP\", \"LDR_LOWER\", \"V_SHAPE\"], when: [{ label: \"PT_BLAD ≥ 0.45 bar\", test: (c) => c.A.PT_BLAD >= 0.9 * c.r.shapeSP }, T(1.5)], limit: 12, why: \"Low-pressure steam, about half a bar, swells the bladder inside the tire so it holds and centres the carcass before the chuck lets go.\" },\n  { name: \"RELEASE\", phase: \"Shape\", out: [\"LDR_LOWER\", \"V_SHAPE\"], when: [N(\"LDR_GRIPPED\"), T(0.4)], limit: 5, why: \"The fingers retract. The bladder is now carrying the tire.\" },\n  { name: \"LOADER_RAISE\", phase: \"Shape\", out: [\"V_SHAPE\"], when: [X(\"LDR_UP\")], limit: 6, why: \"The empty chuck rises out of the tire.\" },\n  { name: \"LOADER_OUT\", phase: \"Shape\", out: [\"V_SHAPE\", \"LDR_REV\"], when: [X(\"LDR_HOME\")], limit: 10, why: \"The loader returns to the stand, where the next green tire is already waiting.\" },\n  { name: \"CLOSE\", phase: \"Close\", out: [\"V_SHAPE\", \"PRESS_DN\"], when: [X(\"PRESS_CLOSED\")], limit: 12, why: \"The beam comes down on its two rods and the top mold half meets the bottom one. It may only move with both arms home.\" },\n  { name: \"SQUEEZE\", phase: \"Close\", out: [\"V_SHAPE\", \"PRESS_DN\", \"SQUEEZE\"], when: [{ label: \"squeeze ≥ 95 % of setpoint\", test: (c) => c.A.PT_HYD * KN_PER_BAR >= 0.95 * c.r.squeezeSP }], limit: 8, why: \"Hydraulic pressure builds the clamp force. It has to exceed the force of the cure pressure trying to push the mold apart, so no high pressure is admitted before it is there.\" },\n  { name: \"CURE_STEAM\", phase: \"Cure\", out: [\"PRESS_DN\", \"SQUEEZE\", \"V_STEAM\"], process: true, when: [{ label: \"steam time elapsed\", test: (c) => c.t >= c.r.steamT }], why: \"Saturated steam at about 14 bar fills the bladder. It is nearly 200 °C, so it heats the tire from inside while the platens heat it from outside.\" },\n  { name: \"CURE_N2\", phase: \"Cure\", out: [\"PRESS_DN\", \"SQUEEZE\", \"V_N2\"], process: true, when: [{ label: \"nitrogen time elapsed\", test: (c) => c.t >= c.r.n2T }], why: \"Nitrogen takes over at higher pressure and presses the rubber into every groove of the mold while the sulphur cross-links form. The PLC watches the pressure for the whole step.\" },\n  { name: \"BLOWDOWN\", phase: \"Open\", out: [\"PRESS_DN\", \"SQUEEZE\", \"V_EXH\"], process: true, when: [{ label: \"PT_BLAD ≤ 0.2 bar\", test: (c) => c.A.PT_BLAD <= 0.2 }, T(2)], why: \"The exhaust valve vents the bladder. The mold stays clamped until the transmitter reads almost zero: opening under pressure is the one thing this machine must never do.\" },\n  { name: \"VACUUM\", phase: \"Open\", out: [\"V_VAC\"], process: true, when: [{ label: \"PT_BLAD ≤ −0.3 bar\", test: (c) => c.A.PT_BLAD <= -0.3 }, T(1.5)], why: \"Vacuum pulls the bladder off the inside of the tire and the squeeze is released.\" },\n  { name: \"OPEN\", phase: \"Open\", out: [\"V_VAC\", \"PRESS_UP\"], when: [X(\"PRESS_OPEN\")], limit: 12, why: \"The beam lifts the top mold half clear. The cured tire stays in the bottom half.\" },\n  { name: \"STRIP_UP\", phase: \"Open\", out: [\"V_VAC\", \"POST_UP\"], when: [X(\"POST_HIGH\")], limit: 6, why: \"The centre post rises and stretches the collapsed bladder thin, peeling it out of the tire.\" },\n  { name: \"STRIP_DOWN\", phase: \"Open\", out: [\"V_VAC\"], when: [X(\"POST_LOW\")], limit: 6, why: \"The post drops back below the bead so the unloader can reach in.\" },\n  { name: \"UNLOAD_IN\", phase: \"Unload\", out: [\"V_VAC\", \"UNL_FWD\"], when: [X(\"UNL_AT_PRESS\")], limit: 10, why: \"The unloader runs in over the mold.\" },\n  { name: \"UNLOAD_LOWER\", phase: \"Unload\", out: [\"V_VAC\", \"UNL_LOWER\"], when: [X(\"UNL_DOWN\")], limit: 6, why: \"Its chuck drops onto the hot tire.\" },\n  { name: \"UNLOAD_GRIP\", phase: \"Unload\", out: [\"V_VAC\", \"UNL_LOWER\", \"UNL_GRIP\"], when: [X(\"UNL_GRIPPED\"), T(0.3)], limit: 5, why: \"The fingers spread and the pressure switch confirms the grip.\" },\n  { name: \"UNLOAD_RAISE\", phase: \"Unload\", out: [\"UNL_GRIP\"], when: [X(\"UNL_UP\")], limit: 6, why: \"The cured tire is lifted out of the mold.\" },\n  { name: \"UNLOAD_OUT\", phase: \"Unload\", out: [\"UNL_GRIP\", \"UNL_REV\"], when: [X(\"UNL_HOME\")], limit: 10, why: \"The carriage carries it out to the conveyor.\" },\n  { name: \"DROP_LOWER\", phase: \"Unload\", out: [\"UNL_GRIP\", \"UNL_LOWER\"], when: [X(\"UNL_DOWN\")], limit: 6, why: \"The tire is set down on the rollers.\" },\n  { name: \"DROP_RELEASE\", phase: \"Unload\", out: [\"UNL_LOWER\"], when: [N(\"UNL_GRIPPED\"), T(0.4)], limit: 5, why: \"The fingers let go.\" },\n  { name: \"DROP_RAISE\", phase: \"Unload\", out: [], when: [X(\"UNL_UP\")], limit: 6, why: \"The chuck rises, the cycle record is written and the conveyor takes the tire away.\" },\n];\nconst PHASES = [\n  [\"Load\", \"The loader takes a green tire from the stand and lowers it into the bottom mold half. Each move ends on a limit switch.\"],\n  [\"Shape\", \"Half a bar of steam swells the bladder inside the tire so it holds the carcass; only then does the chuck let go.\"],\n  [\"Close\", \"The beam closes the mold and hydraulic pressure builds the clamp force that will hold it shut against the cure pressure.\"],\n  [\"Cure\", \"Steam, then nitrogen, press the rubber into the heated mold from inside. Heat and time turn soft compound into elastic rubber.\"],\n  [\"Open\", \"The bladder is vented, then pulled away under vacuum. The press may open only once its pressure reads zero.\"],\n  [\"Unload\", \"The unloader lifts the cured tire onto the conveyor, and the PLC writes one record for it.\"],\n];\nconst CURE_STEPS = [12, 13];\nconst ALARMS = [\n  [\"A001\", \"Emergency stop\"], [\"A002\", \"Guard door open\"], [\"A010\", \"Step watchdog\"],\n  [\"A101\", \"Steam pressure low\"], [\"A102\", \"Cure pressure low\"], [\"A103\", \"Platen temperature out of band\"],\n];\nconst PLC_STATES = [\"Stopped\", \"Ready\", \"Running\", \"Held\", \"Fault\"];\nconst WHERE = [\"none\", \"ldr\", \"mold\", \"unl\"];\n\n// ---- helpers -------------------------------------------------------------------------------\nlet random = Math.random;\nconst setRandom = (fn) => { random = fn || Math.random; };\nconst clamp = (value, low, high) => Math.min(high, Math.max(low, value));\nconst sat = (value) => clamp(value, 0, 1);\nconst noise = (amount) => (random() + random() + random() - 1.5) * amount;\nconst lag = (value, target, dt, tau) => value + (target - value) * (1 - Math.exp(-dt / tau));\nconst tSat = (gauge) => 100 * Math.pow(Math.max(0.05, gauge + 1.013), 0.25);\nconst cureRate = (t) => Math.pow(2, (t - 160) / 10);\nconst axis = (p) => ({ p, v: 0 });\nfunction drive(a, dir, low, high, speed, dt) {\n  const room = dir > 0 ? high - a.p : dir < 0 ? a.p - low : 0;\n  const want = dir * Math.min(speed, room * 7 + speed * 0.05);\n  a.v += (want - a.v) * (1 - Math.exp(-dt / 0.07));\n  a.p += a.v * dt;\n  if (a.p <= low) { a.p = low; if (a.v < 0) a.v = 0; }\n  if (a.p >= high) { a.p = high; if (a.v > 0) a.v = 0; }\n}\n\n// ---- state ---------------------------------------------------------------------------------\nfunction createState(nowMs) {\n  const Q = {};\n  for (const [, name] of DO) Q[name] = false;\n  const [after0, after1] = ANOMALY.firstAfterS;\n  return {\n    version: VERSION, bootMs: nowMs, lastMs: nowMs, simT: 0, seq: 0, gapSeconds: 0,\n    cmd: {\n      mode: 0, warp: 30, recipe: { ...NOMINAL }, estop: false, faults: { leak: false, sag: false, grip: false, guard: false },\n      pulse: { start: true }, // the cell starts itself, like an idle tour\n      anomaliesEnabled: true, meanIntervalMin: 10,\n    },\n    plant: {\n      lift: axis(STROKE), force: 0, hydDrop: 0, tcv: 40,\n      ldr: { x: axis(0), z: axis(0), grip: 0 }, // x: 0 at the stand .. 150 at the press\n      unl: { x: axis(0), z: axis(0), grip: 0 }, // x: 0 at the conveyor .. 150 at the press\n      post: axis(0), pBlad: 0, tBlad: 60, tTop: 174.6, tBot: 175.2, tTire: 28, cure: 0,\n      stand: { present: true, timer: 0 }, work: { where: \"none\", cured: false }, out: { present: false, x: 0, alpha: 0 },\n    },\n    plc: {\n      step: 0, t: 0, run: false, stopReq: false, hold: false, fault: null, alarms: [], alarmSeq: 0, Q, AQ: { TCV_PLATEN: 40, PCV_SQZ: 0 },\n      integral: 40, conv: 0, cycles: 0, r: { ...NOMINAL }, last: {}, rec: null, low: 0, waiting: \"\", I: {}, A: {},\n    },\n    stats: { total: 0, good: 0, rejected: 0, last: null },\n    anomaly: { active: null, nextMs: nowMs + (after0 + random() * (after1 - after0)) * 1000, count: 0, integratedS: 0 },\n    ai: {}, // values written by AI Inference Server, echoed back like an S7 connector would\n  };\n}\n\n// ---- anomalies -----------------------------------------------------------------------------\nconst anomalyDef = (code) => ANOMALIES.find((a) => a.code === code);\nfunction startAnomaly(state, code, severity) {\n  const def = anomalyDef(code);\n  if (!def) throw new Error(`Unknown anomaly code ${code}; use 1..${ANOMALIES.length}`);\n  const an = state.anomaly, now = state.lastMs;\n  const [s0, s1] = ANOMALY.severity;\n  const durationS = ANOMALY.minDurationS + Math.round(random() * (ANOMALY.maxDurationS - ANOMALY.minDurationS));\n  an.count += 1;\n  an.active = {\n    id: `${CONFIG.namespace}-AN-${String(an.count).padStart(4, \"0\")}-${new Date(now).toISOString().replace(/[-:]/g, \"\").slice(0, 15)}`,\n    code, kind: def.kind, severity: Math.round(clamp(severity ?? s0 + random() * (s1 - s0), 0, 1) * 100) / 100,\n    startMs: now, endMs: now + durationS * 1000,\n  };\n}\nfunction endAnomaly(state) {\n  const an = state.anomaly;\n  an.active = null;\n  const mean = Math.max(1, state.cmd.meanIntervalMin) * 60;\n  an.nextMs = state.lastMs + Math.max(ANOMALY.minGapS, -Math.log(1 - random()) * mean) * 1000;\n}\nfunction scheduleAnomalies(state, dtWall) {\n  const an = state.anomaly, now = state.lastMs;\n  if (an.active && now >= an.active.endMs) endAnomaly(state);\n  if (!an.active && state.cmd.anomaliesEnabled && now >= an.nextMs) startAnomaly(state, 1 + Math.floor(random() * ANOMALIES.length));\n  if (an.active) an.integratedS += dtWall;\n}\n// What the plant sees right now from manual faults and the active anomaly.\nfunction effects(state) {\n  const fx = { leakRate: 0, steamBar: 14, platenSupplyC: 195, botTransfer: 1, squeezeGain: 1, squeezeTau: 1, ttTopOffset: 0, ptNoise: 0.03, ptSpikeBar: 0, ldrSpeed: 1, n2Drop: 0, hydLeak: 0, hydRecharge: 0 };\n  const f = state.cmd.faults;\n  if (f.leak) fx.leakRate = 1 / 12;\n  if (f.sag) { fx.steamBar = 9; fx.platenSupplyC = 178; }\n  const a = state.anomaly.active;\n  if (!a) return fx;\n  const s = a.severity, ramp = sat((state.lastMs - a.startMs) / (ANOMALY.rampS * 1000));\n  switch (a.kind) {\n    case \"bladder_leak\": fx.leakRate = Math.max(fx.leakRate, (s * ramp) / 40); break;\n    case \"steam_supply_sag\": fx.steamBar = Math.min(fx.steamBar, 14 - 4 * s * ramp); fx.platenSupplyC = Math.min(fx.platenSupplyC, 195 - 14 * s * ramp); break;\n    case \"platen_steam_trap\": fx.botTransfer = 1 - 0.6 * s * ramp; break;\n    case \"hydraulic_leak\": fx.squeezeGain = 1 - 0.03 * s * ramp; fx.squeezeTau = 1 + 1.2 * s * ramp; fx.hydLeak = 0.5 * s * ramp; fx.hydRecharge = 60 * s; break;\n    case \"platen_sensor_drift\": fx.ttTopOffset = 10 * s * sat((state.lastMs - a.startMs) / 180000); break;\n    case \"pressure_sensor_noise\": fx.ptNoise = 0.03 * (1 + 15 * s * ramp); fx.ptSpikeBar = 2 * s * ramp; break;\n    case \"loader_drive_friction\": fx.ldrSpeed = 1 - 0.55 * s * ramp; break;\n    case \"nitrogen_supply_low\": fx.n2Drop = 3.5 * s * ramp; break;\n  }\n  return fx;\n}\n\n// ---- plant ---------------------------------------------------------------------------------\nfunction thermal(s, Q, tcv, fx, dt) {\n  const closed = s.lift.p < 0.5;\n  for (const key of [\"tTop\", \"tBot\"]) {\n    const loss = key === \"tTop\" && !closed ? 1.9 : 1;\n    const load = closed && s.work.where === \"mold\" ? (s[key] - s.tTire) / 2600 : 0;\n    const transfer = key === \"tBot\" ? fx.botTransfer : 1;\n    s[key] += ((tcv * transfer * (fx.platenSupplyC - s[key])) / 70 - (loss * (s[key] - 25)) / 1500 - load) * dt;\n  }\n  if (Q.V_STEAM) s.tBlad = lag(s.tBlad, tSat(s.pBlad), dt, 8);\n  else if (Q.V_N2) s.tBlad = lag(s.tBlad, 150, dt, 520);\n  else if (Q.V_SHAPE) s.tBlad = lag(s.tBlad, 105, dt, 6);\n  else s.tBlad = lag(s.tBlad, closed ? 120 : 60, dt, 25);\n  if (s.work.where === \"mold\" && closed) {\n    s.tTire = lag(s.tTire, 0.25 * (s.tTop + s.tBot) + 0.5 * s.tBlad, dt, 150);\n    s.cure += cureRate(s.tTire) * dt;\n  }\n}\nfunction pressure(s, Q, r, fx, dt) {\n  if (Q.V_VAC) s.pBlad = lag(s.pBlad, -0.6, dt, 1.4);\n  else if (Q.V_EXH) s.pBlad = lag(s.pBlad, 0, dt, 2.6);\n  else if (Q.V_N2) s.pBlad = lag(s.pBlad, Math.max(r.n2P - fx.n2Drop, s.pBlad), dt, 4);\n  else if (Q.V_STEAM) s.pBlad = lag(s.pBlad, fx.steamBar, dt, 5);\n  else if (Q.V_SHAPE) s.pBlad = lag(s.pBlad, r.shapeSP, dt, 0.9);\n  else s.pBlad = lag(s.pBlad, 0, dt, 12);\n  if (fx.leakRate && s.pBlad > 0) s.pBlad -= s.pBlad * fx.leakRate * dt;\n}\nfunction plantStep(state, fx, dt) {\n  const s = state.plant, Q = state.plc.Q, AQ = state.plc.AQ;\n  const en = Q.MOTION_EN; // with the enable valve shut every axis stays where it is\n  drive(s.lift, en && Q.HYD_PUMP ? (Q.PRESS_UP ? 1 : Q.PRESS_DN ? -1 : 0) : 0, 0, STROKE, 17, dt);\n  const closed = s.lift.p < 0.2;\n  // a hydraulic leak bleeds clamp force until the pump cuts back in: a sawtooth on PT_HYD\n  s.hydDrop = closed && Q.SQUEEZE && fx.hydLeak ? s.hydDrop + fx.hydLeak * dt : 0;\n  if (s.hydDrop > fx.hydRecharge) s.hydDrop = 0;\n  s.force = lag(s.force, closed && Q.SQUEEZE ? AQ.PCV_SQZ * KN_PER_BAR * fx.squeezeGain - s.hydDrop : 0, dt, closed ? 0.55 * fx.squeezeTau : 0.2);\n  for (const [unit, fwd, rev, lower, grip, speed] of [[s.ldr, Q.LDR_FWD, Q.LDR_REV, Q.LDR_LOWER, Q.LDR_GRIP, fx.ldrSpeed], [s.unl, Q.UNL_FWD, Q.UNL_REV, Q.UNL_LOWER, Q.UNL_GRIP, 1]]) {\n    drive(unit.x, en ? (fwd ? 1 : rev ? -1 : 0) : 0, 0, 150, 58 * speed, dt);\n    drive(unit.z, en ? (lower ? 1 : -1) : 0, 0, CARRY, 24, dt);\n    if (en) unit.grip = clamp(unit.grip + (grip ? 1 : -1) * dt * 3.2, 0, 1);\n  }\n  drive(s.post, en ? (Q.POST_UP ? 1 : -1) : 0, 0, POST_UP, 15, dt);\n  s.tcv = lag(s.tcv, AQ.TCV_PLATEN, dt, 0.5); // the platen valve's actuator\n  // the tire changes hands\n  const down = (u) => u.z.p > CARRY - 0.3;\n  if (s.work.where === \"none\" && s.stand.present && s.ldr.grip > 0.9 && down(s.ldr) && s.ldr.x.p < 0.3) { s.work = { where: \"ldr\", cured: false }; s.stand.present = false; s.stand.timer = 5; s.tTire = 28 + noise(2); s.cure = 0; }\n  if (s.work.where === \"ldr\" && s.ldr.grip < 0.1) s.work.where = down(s.ldr) && s.ldr.x.p > 149.7 ? \"mold\" : \"ldr\";\n  if (s.work.where === \"mold\" && s.unl.grip > 0.9 && down(s.unl) && s.unl.x.p > 149.7 && s.lift.p > STROKE - 1) s.work.where = \"unl\";\n  if (s.work.where === \"unl\" && s.unl.grip < 0.1 && down(s.unl) && s.unl.x.p < 0.3) { s.work.where = \"none\"; s.out = { present: true, x: 0, alpha: 1 }; }\n  if (s.work.where === \"mold\" && closed && s.pBlad > 8) s.work.cured = true; // the mold has printed its pattern\n  if (!s.stand.present) { s.stand.timer -= dt; if (s.stand.timer <= 0) s.stand.present = true; }\n  if (s.out.present && Q.CONV_RUN && en) { s.out.x += 13 * dt; s.out.alpha = sat(1 - (s.out.x - 14) / 12); if (s.out.alpha <= 0) s.out.present = false; }\n  pressure(s, Q, state.plc.r, fx, dt);\n  thermal(s, Q, s.tcv / 100, fx, dt);\n}\n// the cure a nominal recipe gives, from the same thermal model: 100 %\nconst CURE_REF = (() => {\n  const fx = { leakRate: 0, steamBar: 14, platenSupplyC: 195, botTransfer: 1, n2Drop: 0 };\n  const s = { lift: { p: 0 }, work: { where: \"mold\" }, tTop: 175, tBot: 175, tBlad: 105, tTire: 28, pBlad: 0.5, cure: 0 };\n  const run = (Q, seconds) => { for (let t = 0; t < seconds; t += 0.5) { pressure(s, Q, NOMINAL, fx, 0.5); thermal(s, Q, 0.42, fx, 0.5); s.tTop = s.tBot = 175; } };\n  run({ V_SHAPE: true }, 4); run({ V_STEAM: true }, NOMINAL.steamT); run({ V_N2: true }, NOMINAL.n2T); run({ V_EXH: true }, 8);\n  return s.cure;\n})();\nconst cureIndex = (state) => (state.plant.cure / CURE_REF) * 100;\n\nfunction readInputs(state, fx) {\n  const s = state.plant, cmd = state.cmd, I = {}, near = (a, target) => Math.abs(a.p - target) < 0.2;\n  I.ESTOP_OK = !cmd.estop; I.GUARD_OK = !cmd.faults.guard;\n  I.PB_START = Boolean(cmd.pulse.start); I.PB_STOP = Boolean(cmd.pulse.stop); I.PB_RESET = Boolean(cmd.pulse.reset);\n  I.PRESS_OPEN = near(s.lift, STROKE); I.PRESS_CLOSED = near(s.lift, 0); I.PE_STAND = s.stand.present;\n  I.LDR_HOME = near(s.ldr.x, 0); I.LDR_AT_PRESS = near(s.ldr.x, 150); I.LDR_UP = near(s.ldr.z, 0); I.LDR_DOWN = near(s.ldr.z, CARRY);\n  I.LDR_GRIPPED = s.ldr.grip > 0.95 && !cmd.faults.grip; I.POST_LOW = near(s.post, 0); I.POST_HIGH = near(s.post, POST_UP); I.PE_CONV = s.out.present && s.out.alpha > 0.5;\n  I.UNL_HOME = near(s.unl.x, 0); I.UNL_AT_PRESS = near(s.unl.x, 150); I.UNL_UP = near(s.unl.z, 0); I.UNL_DOWN = near(s.unl.z, CARRY);\n  I.UNL_GRIPPED = s.unl.grip > 0.95; I.HYD_OK = state.plc.Q.HYD_PUMP;\n  const spike = fx.ptSpikeBar && random() < 0.004 ? (random() < 0.5 ? -1 : 1) * fx.ptSpikeBar * (0.5 + random()) : 0;\n  const current = (a, drag) => 0.35 + (Math.abs(a.v) > 0.5 ? 2.6 + 4.5 * drag : 0) + noise(0.05);\n  const A = {\n    TT_TOP: s.tTop + fx.ttTopOffset + noise(0.25), TT_BOT: s.tBot + noise(0.25), PT_BLAD: s.pBlad + noise(fx.ptNoise) + spike, TT_BLAD: s.tBlad + noise(0.4),\n    PT_HYD: s.force / KN_PER_BAR + noise(0.6), ZT_PRESS: s.lift.p * MM + noise(0.4), IT_LDR: current(s.ldr.x, 1 - fx.ldrSpeed), IT_UNL: current(s.unl.x, 0),\n  };\n  return { I, A };\n}\n\n// ---- PLC -----------------------------------------------------------------------------------\nfunction alarm(state, code, text, level = \"warn\") {\n  const plc = state.plc;\n  if (plc.alarms.some((a) => a.code === code && a.cycle === plc.cycles && !a.cleared)) return;\n  plc.alarmSeq += 1;\n  plc.alarms.unshift({ code, text, level, at: state.simT, ms: state.lastMs, cycle: plc.cycles, cleared: false, seq: plc.alarmSeq });\n  if (plc.alarms.length > 30) plc.alarms.pop();\n  if (plc.rec && level !== \"info\") plc.rec.alarms.push(code);\n}\nfunction scan(state, fx, dt) {\n  const plc = state.plc;\n  const { I, A } = readInputs(state, fx);\n  plc.I = I; plc.A = A;\n  const rise = (name) => I[name] && !plc.last[name];\n  // safety chain: latched, needs RESET with the chain healthy\n  if (!I.ESTOP_OK && !plc.hold) alarm(state, \"A001\", \"Emergency stop pressed: motion outputs off\", \"stop\");\n  if (!I.GUARD_OK && !plc.hold) alarm(state, \"A002\", \"Guard door open: motion outputs off\", \"stop\");\n  if (!I.ESTOP_OK || !I.GUARD_OK) plc.hold = true;\n  if (rise(\"PB_RESET\") && I.ESTOP_OK && I.GUARD_OK) { plc.hold = false; plc.fault = null; plc.t = Math.min(plc.t, 0.01 + plc.t * (STEPS[plc.step].process ? 1 : 0)); plc.alarms.forEach((a) => (a.cleared = true)); }\n  if (rise(\"PB_START\") && !plc.hold && !plc.fault) { plc.run = true; plc.stopReq = false; }\n  if (rise(\"PB_STOP\")) plc.stopReq = true;\n  const motion = !plc.hold && !plc.fault;\n  // platen temperature: PI on the mean of both platens\n  const error = plc.r.platenSP - (A.TT_TOP + A.TT_BOT) / 2;\n  plc.integral = clamp(plc.integral + error * 0.5 * dt, 0, 100);\n  plc.AQ.TCV_PLATEN = clamp(error * 14 + plc.integral, 0, 100);\n  // sequencer\n  const step = STEPS[plc.step];\n  const c = { I, A, t: plc.t, run: plc.run, r: plc.r };\n  if (motion || step.process) {\n    plc.t += dt;\n    const open = step.when.find((term) => !term.test(c));\n    plc.waiting = open ? open.label : \"\";\n    if (!open) advanceStep(state);\n    else if (step.limit && plc.t > step.limit) { plc.fault = `Step ${plc.step} ${step.name} timed out waiting for ${open.label}`; alarm(state, \"A010\", plc.fault, \"stop\"); }\n  }\n  // cure supervision\n  if (plc.step === 13 && plc.t > 30) { plc.low = A.PT_BLAD < plc.r.n2P - 2 ? plc.low + dt : 0; if (plc.low > 5) alarm(state, \"A102\", `Cure pressure low: ${A.PT_BLAD.toFixed(1)} bar, setpoint ${plc.r.n2P} bar`); } else plc.low = 0;\n  if (plc.step === 12 && plc.t > 45 && A.PT_BLAD < 11.5) alarm(state, \"A101\", `Steam pressure low: ${A.PT_BLAD.toFixed(1)} bar`);\n  if ((plc.step === 12 || plc.step === 13) && Math.abs(error) > 6) alarm(state, \"A103\", \"Platen temperature out of band\");\n  if (plc.rec && plc.step >= 12 && plc.step <= 13) { plc.rec.pMax = Math.max(plc.rec.pMax, A.PT_BLAD); plc.rec.tSum += ((A.TT_TOP + A.TT_BOT) / 2) * dt; plc.rec.tTime += dt; plc.rec.fMin = Math.min(plc.rec.fMin, A.PT_HYD * KN_PER_BAR); }\n  if (plc.rec && state.anomaly.active && !plc.rec.anomalies.includes(state.anomaly.active.kind)) plc.rec.anomalies.push(state.anomaly.active.kind);\n  // outputs: the active step's actions, then interlocks, then the safety mask\n  const Q = plc.Q;\n  for (const key in Q) Q[key] = false;\n  for (const name of STEPS[plc.step].out) Q[name] = true;\n  Q.PRESS_DN = Q.PRESS_DN && I.LDR_HOME && I.UNL_HOME;\n  Q.PRESS_UP = Q.PRESS_UP && A.PT_BLAD < 0.3;\n  Q.LDR_FWD = Q.LDR_FWD && I.PRESS_OPEN && I.UNL_HOME && I.LDR_UP;\n  Q.UNL_FWD = Q.UNL_FWD && I.PRESS_OPEN && I.LDR_HOME && I.UNL_UP;\n  Q.V_STEAM = Q.V_STEAM && I.PRESS_CLOSED;\n  Q.V_N2 = Q.V_N2 && I.PRESS_CLOSED;\n  if (!motion) for (const name of [\"PRESS_UP\", \"PRESS_DN\", \"LDR_FWD\", \"LDR_REV\", \"UNL_FWD\", \"UNL_REV\"]) Q[name] = false;\n  Q.MOTION_EN = motion;\n  Q.HYD_PUMP = I.ESTOP_OK && (plc.run || plc.step > 0);\n  plc.AQ.PCV_SQZ = Q.SQUEEZE ? plc.r.squeezeSP / KN_PER_BAR : 0;\n  if (plc.conv > 0 && motion) { plc.conv -= dt; Q.CONV_RUN = true; }\n  Q.LAMP_R = plc.hold || Boolean(plc.fault);\n  Q.LAMP_A = !Q.LAMP_R && ((plc.stopReq && plc.run) || plc.alarms.some((a) => !a.cleared && a.level === \"warn\") || (plc.run && plc.step === 0));\n  Q.LAMP_G = !Q.LAMP_R && plc.run && plc.step > 0;\n  plc.last = I;\n}\nconst serialOf = (state, n) => { const d = new Date(state.lastMs); return `GT${String(d.getUTCFullYear()).slice(2)}${String(d.getUTCMonth() + 1).padStart(2, \"0\")}${String(d.getUTCDate()).padStart(2, \"0\")}-${String(n).padStart(4, \"0\")}`; };\nfunction advanceStep(state) {\n  const plc = state.plc;\n  const from = plc.step;\n  plc.step = (plc.step + 1) % STEPS.length;\n  plc.t = 0;\n  if (from === 0) {\n    plc.r = { ...state.cmd.recipe };\n    plc.cycles += 1;\n    plc.rec = { n: plc.cycles, serial: serialOf(state, plc.cycles), start: state.simT, startMs: state.lastMs, pMax: 0, tSum: 0, tTime: 0, fMin: 1e9, alarms: [], anomalies: [], recipe: { ...plc.r } };\n  }\n  if (plc.step === 0) {\n    plc.conv = 3.2;\n    finish(state);\n    if (state.cmd.mode === 1 || plc.stopReq) { plc.run = false; plc.stopReq = false; }\n  }\n}\nfunction finish(state) {\n  const rec = state.plc.rec;\n  if (!rec) return;\n  rec.end = state.simT; rec.endMs = state.lastMs; rec.cycleTime = rec.end - rec.start; rec.cure = cureIndex(state); rec.platen = rec.tTime ? rec.tSum / rec.tTime : 0;\n  const reasons = [];\n  if (rec.cure < 92) reasons.push(\"under-cured\");\n  if (rec.cure > 135) reasons.push(\"over-cured\");\n  if (rec.alarms.includes(\"A102\") || rec.alarms.includes(\"A101\")) reasons.push(\"low pressure\");\n  if (rec.alarms.includes(\"A103\")) reasons.push(\"platen temperature\");\n  rec.ok = reasons.length === 0; rec.reason = reasons.join(\", \");\n  const stats = state.stats;\n  stats.total += 1; if (rec.ok) stats.good += 1; else stats.rejected += 1;\n  stats.last = rec; state.plc.rec = null;\n}\n\n// ---- time ----------------------------------------------------------------------------------\nconst curing = (state) => CURE_STEPS.includes(state.plc.step);\n// Integrate from the last call to nowMs in PLC scans. Only the cure steps run faster than real time.\nfunction advance(state, nowMs) {\n  if (!(nowMs > state.lastMs)) { if (nowMs < state.lastMs) state.lastMs = nowMs; return state; }\n  const gapS = (nowMs - state.lastMs) / 1000;\n  if (gapS > CONFIG.maxCatchupS) { state.gapSeconds += gapS; state.lastMs = nowMs; return state; }\n  let left = gapS;\n  while (left > 1e-9) {\n    const k = curing(state) ? Math.max(1, state.cmd.warp) : 1;\n    const dt = Math.min(CONFIG.scanS, left * k);\n    const dtWall = dt / k;\n    left -= dtWall;\n    state.lastMs = Math.min(nowMs, state.lastMs + dtWall * 1000);\n    scheduleAnomalies(state, dtWall);\n    const fx = effects(state);\n    plantStep(state, fx, dt);\n    scan(state, fx, dt);\n    state.cmd.pulse = {};\n    state.simT += dt;\n  }\n  state.lastMs = nowMs;\n  return state;\n}\n\n// ---- tags ----------------------------------------------------------------------------------\n// The registry is append-only: tag IDs are positions, so new tags go at the end of a group.\nconst registry = [];\nfunction add(group, name, dataType, unit, description, read, options = {}) {\n  registry.push({ id: String(1001 + registry.length), name: `${CONFIG.namespace}.${name}`, group, dataType, unit, description, read, role: options.role || \"simulated\", write: options.write || null, external: Boolean(options.external) });\n}\nconst bool = (v) => {\n  if (v === true || v === 1 || v === \"1\" || v === \"true\" || v === \"TRUE\") return true;\n  if (v === false || v === 0 || v === \"0\" || v === \"false\" || v === \"FALSE\") return false;\n  throw new Error(\"expects a boolean\");\n};\nconst integer = (v) => { const n = Number(v); if (!Number.isInteger(n)) throw new Error(\"expects an integer\"); return n; };\nconst real = (v) => { const n = Number(v); if (v === \"\" || v === null || !Number.isFinite(n)) throw new Error(\"expects a number\"); return n; };\nconst COERCE = { Bool: bool, Int: integer, DInt: integer, UInt: integer, UDInt: integer, Real: real, String: (v) => String(v) };\nconst iso = (ms) => (ms ? new Date(ms).toISOString() : \"\");\nconst activeAlarm = (state, code) => state.plc.alarms.some((a) => a.code === code && !a.cleared);\nconst plcState = (plc) => (plc.fault ? 4 : plc.hold ? 3 : plc.run ? (plc.step === 0 ? 1 : 2) : 0);\n\n// Press: I/O image, PLC status, active recipe and the positions the HMI draws from\nadd(\"Press\", \"Info.DataOrigin\", \"String\", \"\", \"Always simulation, never field measurements\", () => \"ENGINEERING_SIMULATION\", { role: \"provenance\" });\nadd(\"Press\", \"Info.ModelVersion\", \"String\", \"\", \"Simulation model version\", () => VERSION, { role: \"configuration\" });\nadd(\"Press\", \"Info.UtcTimestamp\", \"String\", \"\", \"Snapshot UTC time\", (st) => iso(st.lastMs), { role: \"diagnostic\" });\nadd(\"Press\", \"Info.Sequence\", \"UDInt\", \"\", \"Publication sequence\", (st) => st.seq, { role: \"diagnostic\" });\nadd(\"Press\", \"Info.ProcessSeconds\", \"Real\", \"s\", \"Process time; cure steps run faster than wall time by CureWarp\", (st) => st.simT, { role: \"diagnostic\" });\nadd(\"Press\", \"Info.SkippedSeconds\", \"Real\", \"s\", \"Runtime gaps not backfilled as production\", (st) => st.gapSeconds, { role: \"diagnostic\" });\nfor (const [addr, name, text] of DI) add(\"Press\", `IO.DI.${name}`, \"Bool\", \"\", `${addr} ${text}`, (st) => Boolean(st.plc.I[name]));\nfor (const [addr, name, text] of DO) add(\"Press\", `IO.DO.${name}`, \"Bool\", \"\", `${addr} ${text}`, (st) => Boolean(st.plc.Q[name]));\nfor (const [addr, name, text, unit] of AI) add(\"Press\", `IO.AI.${name}`, \"Real\", unit, `${addr} ${text}`, (st) => st.plc.A[name] ?? 0);\nfor (const [addr, name, text, unit] of AO) add(\"Press\", `IO.AO.${name}`, \"Real\", unit, `${addr} ${text}`, (st) => st.plc.AQ[name]);\nadd(\"Press\", \"PLC.State\", \"Int\", \"\", \"0 stopped, 1 ready, 2 running, 3 held, 4 fault\", (st) => plcState(st.plc));\nadd(\"Press\", \"PLC.Step\", \"Int\", \"\", \"Active sequence step 0..26\", (st) => st.plc.step);\nadd(\"Press\", \"PLC.StepName\", \"String\", \"\", \"Active sequence step name\", (st) => STEPS[st.plc.step].name);\nadd(\"Press\", \"PLC.Phase\", \"String\", \"\", \"Load, Shape, Close, Cure, Open or Unload\", (st) => STEPS[st.plc.step].phase);\nadd(\"Press\", \"PLC.StepTimeS\", \"Real\", \"s\", \"Process time in the active step\", (st) => st.plc.t);\nadd(\"Press\", \"PLC.RunLatched\", \"Bool\", \"\", \"Start latched\", (st) => st.plc.run);\nadd(\"Press\", \"PLC.StopRequested\", \"Bool\", \"\", \"Cycle stop pending at the end of the cycle\", (st) => st.plc.stopReq);\nadd(\"Press\", \"PLC.SafetyHold\", \"Bool\", \"\", \"Safety chain opened; needs Reset\", (st) => st.plc.hold);\nadd(\"Press\", \"PLC.Faulted\", \"Bool\", \"\", \"Sequence fault latched; needs Reset\", (st) => Boolean(st.plc.fault));\nadd(\"Press\", \"PLC.FaultText\", \"String\", \"\", \"Latched fault\", (st) => st.plc.fault || \"\");\nadd(\"Press\", \"PLC.Waiting\", \"String\", \"\", \"First open transition term of the active step\", (st) => st.plc.waiting);\nadd(\"Press\", \"PLC.CycleNumber\", \"UDInt\", \"count\", \"Cycles started\", (st) => st.plc.cycles);\nfor (const [key, tag, label, , , , unit] of RECIPE) add(\"Press\", `Recipe.Active.${tag}`, \"Real\", unit, `${label} of the cycle in progress`, (st) => st.plc.r[key], { role: \"configuration\" });\nadd(\"Press\", \"Process.CureIndexPct\", \"Real\", \"%\", \"Cure state of the tire in the mold; 100 = nominal recipe\", (st) => cureIndex(st), { role: \"model\" });\nadd(\"Press\", \"Process.TireTemperatureC\", \"Real\", \"°C\", \"Modelled tire core temperature\", (st) => st.plant.tTire, { role: \"model\" });\nadd(\"Press\", \"Motion.LiftPos\", \"Real\", \"unit\", \"Press opening, 0 closed .. 55 open\", (st) => st.plant.lift.p, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.LoaderX\", \"Real\", \"unit\", \"Loader carriage, 0 stand .. 150 press\", (st) => st.plant.ldr.x.p, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.LoaderZ\", \"Real\", \"unit\", \"Loader chuck, 0 up .. 23 down\", (st) => st.plant.ldr.z.p, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.LoaderGrip\", \"Real\", \"\", \"Loader fingers, 0 closed .. 1 spread\", (st) => st.plant.ldr.grip, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.UnloaderX\", \"Real\", \"unit\", \"Unloader carriage, 0 conveyor .. 150 press\", (st) => st.plant.unl.x.p, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.UnloaderZ\", \"Real\", \"unit\", \"Unloader chuck, 0 up .. 23 down\", (st) => st.plant.unl.z.p, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.UnloaderGrip\", \"Real\", \"\", \"Unloader fingers, 0 closed .. 1 spread\", (st) => st.plant.unl.grip, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.PostPos\", \"Real\", \"unit\", \"Centre post, 0 low .. 22 high\", (st) => st.plant.post.p, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.BladderBar\", \"Real\", \"bar\", \"Bladder pressure without transmitter error, for the drawing\", (st) => st.plant.pBlad, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.StandTire\", \"Bool\", \"\", \"Green tire on the stand\", (st) => st.plant.stand.present, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.WorkTire\", \"Int\", \"\", \"Tire in work: 0 none, 1 loader, 2 mold, 3 unloader\", (st) => WHERE.indexOf(st.plant.work.where), { role: \"visualisation\" });\nadd(\"Press\", \"Motion.WorkCured\", \"Bool\", \"\", \"Tire in work is cured\", (st) => st.plant.work.cured, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.OutTire\", \"Bool\", \"\", \"Cured tire on the conveyor\", (st) => st.plant.out.present, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.OutX\", \"Real\", \"unit\", \"Cured tire travel along the conveyor\", (st) => st.plant.out.x, { role: \"visualisation\" });\nadd(\"Press\", \"Motion.OutAlpha\", \"Real\", \"\", \"Cured tire leaving the drawing, 1 .. 0\", (st) => st.plant.out.alpha, { role: \"visualisation\" });\n\n// Cycle: the record of the last finished tire, counters and alarms\nconst last = (st) => st.stats.last || {};\nadd(\"Cycle\", \"Cycle.Total\", \"UDInt\", \"count\", \"Finished tires\", (st) => st.stats.total, { role: \"counter\" });\nadd(\"Cycle\", \"Cycle.Good\", \"UDInt\", \"count\", \"Tires judged OK\", (st) => st.stats.good, { role: \"counter\" });\nadd(\"Cycle\", \"Cycle.Rejected\", \"UDInt\", \"count\", \"Tires judged NOK\", (st) => st.stats.rejected, { role: \"counter\" });\nadd(\"Cycle\", \"Cycle.Last.Number\", \"UDInt\", \"\", \"Cycle number of the last finished tire\", (st) => last(st).n || 0);\nadd(\"Cycle\", \"Cycle.Last.Serial\", \"String\", \"\", \"Serial of the last finished tire\", (st) => last(st).serial || \"\");\nadd(\"Cycle\", \"Cycle.Last.StartUtc\", \"String\", \"\", \"Cycle start\", (st) => iso(last(st).startMs));\nadd(\"Cycle\", \"Cycle.Last.EndUtc\", \"String\", \"\", \"Cycle end\", (st) => iso(last(st).endMs));\nadd(\"Cycle\", \"Cycle.Last.CycleTimeS\", \"Real\", \"s\", \"Cycle time in process seconds\", (st) => last(st).cycleTime || 0);\nadd(\"Cycle\", \"Cycle.Last.PMaxBar\", \"Real\", \"bar\", \"Highest bladder pressure in the cure\", (st) => last(st).pMax || 0);\nadd(\"Cycle\", \"Cycle.Last.PlatenMeanC\", \"Real\", \"°C\", \"Mean platen temperature in the cure\", (st) => last(st).platen || 0);\nadd(\"Cycle\", \"Cycle.Last.SqueezeMinKn\", \"Real\", \"kN\", \"Lowest squeeze force in the cure\", (st) => (last(st).n ? last(st).fMin : 0));\nadd(\"Cycle\", \"Cycle.Last.CureIndexPct\", \"Real\", \"%\", \"Cure index of the last tire\", (st) => last(st).cure || 0);\nadd(\"Cycle\", \"Cycle.Last.Ok\", \"Bool\", \"\", \"Last tire judged OK\", (st) => Boolean(last(st).ok));\nadd(\"Cycle\", \"Cycle.Last.Reason\", \"String\", \"\", \"Why the last tire was rejected\", (st) => last(st).reason || \"\");\nadd(\"Cycle\", \"Cycle.Last.Alarms\", \"String\", \"\", \"Alarm codes raised in the cycle\", (st) => (last(st).alarms || []).join(\" \"));\nfor (const [key, tag, label, , , , unit] of RECIPE) add(\"Cycle\", `Cycle.Last.Sp.${tag}`, \"Real\", unit, `${label} the last tire was cured with`, (st) => (last(st).recipe ? last(st).recipe[key] : 0), { role: \"configuration\" });\nadd(\"Cycle\", \"Alarm.ActiveCount\", \"UInt\", \"count\", \"Uncleared alarms\", (st) => st.plc.alarms.filter((a) => !a.cleared).length);\nadd(\"Cycle\", \"Alarm.Seq\", \"UDInt\", \"\", \"Increments with every new alarm\", (st) => st.plc.alarmSeq);\nadd(\"Cycle\", \"Alarm.LastCode\", \"String\", \"\", \"Code of the newest alarm\", (st) => (st.plc.alarms[0] || {}).code || \"\");\nadd(\"Cycle\", \"Alarm.LastText\", \"String\", \"\", \"Text of the newest alarm\", (st) => (st.plc.alarms[0] || {}).text || \"\");\nadd(\"Cycle\", \"Alarm.LastLevel\", \"String\", \"\", \"warn or stop\", (st) => (st.plc.alarms[0] || {}).level || \"\");\nadd(\"Cycle\", \"Alarm.LastAtS\", \"Real\", \"s\", \"Process time of the newest alarm\", (st) => (st.plc.alarms[0] || {}).at || 0);\nfor (const [code, text] of ALARMS) add(\"Cycle\", `Alarm.Active.${code}`, \"Bool\", \"\", text, (st) => activeAlarm(st, code));\n\n// Anomaly: ground truth of the injected anomaly. Exclude from detector inputs; use it to score them.\nconst act = (st) => st.anomaly.active;\nadd(\"Anomaly\", \"Anomaly.Active\", \"Bool\", \"\", \"An injected anomaly is acting on the plant\", (st) => Boolean(act(st)), { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.TypeCode\", \"Int\", \"\", \"0 none, \" + ANOMALIES.map((a) => `${a.code} ${a.kind}`).join(\", \"), (st) => (act(st) ? act(st).code : 0), { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.Type\", \"String\", \"\", \"Anomaly kind\", (st) => (act(st) ? act(st).kind : \"\"), { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.Severity\", \"Real\", \"\", \"0..1\", (st) => (act(st) ? act(st).severity : 0), { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.EventId\", \"String\", \"\", \"Unique event identifier\", (st) => (act(st) ? act(st).id : \"\"), { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.StartUtc\", \"String\", \"\", \"Onset\", (st) => (act(st) ? iso(act(st).startMs) : \"\"), { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.EndUtc\", \"String\", \"\", \"Scheduled end\", (st) => (act(st) ? iso(act(st).endMs) : \"\"), { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.SecondsRemaining\", \"Real\", \"s\", \"Wall seconds until the anomaly ends\", (st) => (act(st) ? Math.max(0, (act(st).endMs - st.lastMs) / 1000) : 0), { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.Count\", \"UDInt\", \"count\", \"Anomalies injected since start\", (st) => st.anomaly.count, { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.IntegratedSeconds\", \"Real\", \"s\", \"Wall seconds with an anomaly active\", (st) => st.anomaly.integratedS, { role: \"ground_truth\" });\nadd(\"Anomaly\", \"Anomaly.LastCycleTypes\", \"String\", \"\", \"Anomaly kinds active during the last finished tire\", (st) => (last(st).anomalies || []).join(\" \"), { role: \"ground_truth\" });\n\n// Command: written by the HMI or any databus client on the write topic, read back like a PLC DB\nconst pulse = (key) => ({ role: \"command\", write: (st, v) => { if (v) st.cmd.pulse[key] = true; } });\nadd(\"Command\", \"Cmd.Start\", \"Bool\", \"\", \"Pulse: start push button\", () => false, pulse(\"start\"));\nadd(\"Command\", \"Cmd.Stop\", \"Bool\", \"\", \"Pulse: cycle stop push button\", () => false, pulse(\"stop\"));\nadd(\"Command\", \"Cmd.Reset\", \"Bool\", \"\", \"Pulse: reset push button\", () => false, pulse(\"reset\"));\nadd(\"Command\", \"Cmd.EStop\", \"Bool\", \"\", \"Emergency stop pressed (latched)\", (st) => st.cmd.estop, { role: \"command\", write: (st, v) => { st.cmd.estop = v; } });\nadd(\"Command\", \"Cmd.Mode\", \"Int\", \"\", \"0 automatic, 1 single cycle\", (st) => st.cmd.mode, { role: \"command\", write: (st, v) => { if (v !== 0 && v !== 1) throw new Error(\"must be 0 or 1\"); st.cmd.mode = v; } });\nadd(\"Command\", \"Cmd.CureWarp\", \"Int\", \"x\", \"Cure steps run this many times faster than wall time, 1..120\", (st) => st.cmd.warp, { role: \"command\", write: (st, v) => { st.cmd.warp = clamp(v, 1, 120); } });\nfor (const [key, tag, label, min, max, , unit] of RECIPE) add(\"Command\", `Cmd.Recipe.${tag}`, \"Real\", unit, `${label} for the next cycle, ${min}..${max}`, (st) => st.cmd.recipe[key], { role: \"command\", write: (st, v) => { st.cmd.recipe[key] = clamp(v, min, max); } });\nfor (const [key, tag, label] of FAULTS) add(\"Command\", `Cmd.Fault.${tag}`, \"Bool\", \"\", `Manual fault: ${label}`, (st) => st.cmd.faults[key], { role: \"command\", write: (st, v) => { st.cmd.faults[key] = v; } });\nadd(\"Command\", \"Cmd.Anomaly.RandomEnabled\", \"Bool\", \"\", \"Inject random anomalies\", (st) => st.cmd.anomaliesEnabled, { role: \"command\", write: (st, v) => {\n  if (v && !st.cmd.anomaliesEnabled && !st.anomaly.active) endAnomaly(st); // schedule the next one from now\n  st.cmd.anomaliesEnabled = v;\n} });\nadd(\"Command\", \"Cmd.Anomaly.MeanIntervalMin\", \"Real\", \"min\", \"Mean wall minutes between random anomalies, 1..1440\", (st) => st.cmd.meanIntervalMin, { role: \"command\", write: (st, v) => {\n  st.cmd.meanIntervalMin = clamp(v, 1, 1440);\n  if (!st.anomaly.active) endAnomaly(st);\n} });\nadd(\"Command\", \"Cmd.Anomaly.Inject\", \"Int\", \"\", \"Write a type code to start that anomaly now (replaces an active one)\", () => 0, { role: \"command\", write: (st, v) => { if (v) startAnomaly(st, v); } });\nadd(\"Command\", \"Cmd.Anomaly.Clear\", \"Bool\", \"\", \"Pulse: end the active anomaly\", () => false, { role: \"command\", write: (st, v) => { if (v && st.anomaly.active) endAnomaly(st); } });\n\n// AI: outputs of an AI Inference Server pipeline. Never written by the simulation; declared so AIIS can map them.\n// AIIS writes SIMATIC v1 outputs as integers, so the values are scaled DInt codes.\nconst aiTag = (name, description) => add(\"AI\", `AI.${name}`, \"DInt\", \"\", description, (st) => (st.ai[`${CONFIG.namespace}.AI.${name}`] || {}).val ?? 0,\n  { role: \"ai_output\", external: true, write: (st, v, name2, ms) => { st.ai[name2] = { val: v, ms }; } });\naiTag(\"AnomalyScore\", \"AI anomaly score 0..1000 permille; 500 = warning threshold\");\naiTag(\"Status\", \"AI status: 0 normal, 1 warning, 2 alarm\");\naiTag(\"PredictedType\", \"AI guess of the anomaly type code, 0 none\");\n\n// ---- SIMATIC v1 messages -------------------------------------------------------------------\nconst topics = () => {\n  const { connector, connection } = CONFIG;\n  return {\n    metadata: `ie/m/j/simatic/v1/${connector}/dp`,\n    read: `ie/d/j/simatic/v1/${connector}/dp/r/${connection}`,\n    write: `ie/d/j/simatic/v1/${connector}/dp/w/${connection}`,\n  };\n};\nconst groups = [...new Set(registry.map((tag) => tag.group))];\nconst chunks = groups.flatMap((group) => {\n  const entries = registry.filter((tag) => tag.group === group);\n  const result = [];\n  for (let offset = 0; offset < entries.length; offset += 100) result.push({ name: `${group}_${offset / 100}`, group, entries: entries.slice(offset, offset + 100) });\n  return result;\n});\nconst publishedChunks = chunks.filter((chunk) => !chunk.entries.every((tag) => tag.external));\nconst writableChunks = chunks.filter((chunk) => chunk.entries.some((tag) => tag.write));\nconst byId = new Map(registry.map((tag) => [tag.id, tag]));\nconst byName = new Map(registry.map((tag) => [tag.name, tag]));\nconst chunkOf = new Map(chunks.flatMap((chunk) => chunk.entries.map((tag) => [tag.id, chunk.name])));\n\nfunction catalog() {\n  return registry.map(({ read, write, ...definition }) => ({ ...definition, chunk: chunkOf.get(definition.id), access: write ? \"rw\" : \"r\" }));\n}\nfunction hashVersion() {\n  let h = 2166136261;\n  for (const ch of JSON.stringify([VERSION, CONFIG.connector, CONFIG.connection, catalog()])) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }\n  return h >>> 0;\n}\nfunction metadata() {\n  const t = topics();\n  return {\n    applicationName: CONFIG.applicationName,\n    connections: [{\n      name: CONFIG.connection, type: \"S7Plus\",\n      dataPoints: chunks.map((chunk) => ({\n        name: chunk.name, publishType: \"bulk\", topic: `${t.read}/${chunk.name}`,\n        ...(writableChunks.includes(chunk) ? { pubTopic: `${t.write}/${chunk.name}` } : {}),\n        dataPointDefinitions: chunk.entries.map((tag) => ({\n          id: tag.id, name: tag.name, dataType: tag.dataType, accessMode: tag.write ? \"rw\" : \"r\",\n          acquisitionCycleInMs: CONFIG.publishEveryMs, acquisitionMode: \"Cyclic\",\n        })),\n      })),\n    }],\n    hashVersion: hashVersion(),\n    seq: 1,\n  };\n}\nfunction encode(tag, value) {\n  if (tag.dataType === \"Bool\") return Boolean(value);\n  if (tag.dataType === \"String\") return String(value ?? \"\").slice(0, 254);\n  if (typeof value !== \"number\" || !Number.isFinite(value)) throw new Error(`Non-finite value: ${tag.name}`);\n  return tag.dataType === \"Real\" ? Math.round(value * 1e6) / 1e6 : Math.round(value);\n}\n// One bulk payload per published chunk, as an S7 connector would send them.\nfunction messages(state) {\n  state.seq = state.seq >= 4294967295 ? 1 : state.seq + 1;\n  const ts = iso(state.lastMs), base = topics().read;\n  return publishedChunks.map((chunk) => ({\n    chunk: chunk.name, topic: `${base}/${chunk.name}`,\n    payload: { seq: state.seq, vals: chunk.entries.filter((tag) => !tag.external).map((tag) => ({ id: tag.id, qc: 3, ts, val: encode(tag, tag.read(state)) })) },\n  }));\n}\n// Values by name, the HMI's view of one publication.\nfunction snapshot(state) {\n  const values = {};\n  for (const tag of registry) if (!tag.external || state.ai[tag.name]) values[tag.name] = encode(tag, tag.read(state));\n  return values;\n}\n// Apply writes, by tag name or SIMATIC id. Returns what was applied, what was refused and the read-back\n// messages for externally written chunks (the S7 connector echoes AI outputs on the read topic).\nfunction applyWrites(state, values, nowMs = state.lastMs) {\n  const applied = [], errors = [], external = [];\n  for (const [key, raw] of Object.entries(values || {})) {\n    const tag = byId.get(String(key)) || byName.get(key) || byName.get(`${CONFIG.namespace}.${key}`);\n    if (!tag) { errors.push(`${key}: unknown tag`); continue; }\n    if (!tag.write) { errors.push(`${tag.name}: read-only`); continue; }\n    try {\n      tag.write(state, COERCE[tag.dataType](raw), tag.name, nowMs);\n      applied.push(tag.name);\n      if (tag.external) external.push(tag);\n    } catch (error) { errors.push(`${tag.name}: ${error.message}`); }\n  }\n  const base = topics().read;\n  const echoes = [...new Set(external.map((tag) => chunkOf.get(tag.id)))].map((name) => ({\n    chunk: name, topic: `${base}/${name}`,\n    payload: { seq: state.seq, vals: external.filter((tag) => chunkOf.get(tag.id) === name).map((tag) => ({ id: tag.id, qc: 3, ts: iso(state.ai[tag.name].ms), val: encode(tag, tag.read(state)) })) },\n  }));\n  return { applied, errors, echoes };\n}\n// SIMATIC v1 write payload {seq, vals:[{id, val}]} to {id: val}\nfunction parseWrite(payload) {\n  const p = typeof payload === \"string\" ? JSON.parse(payload) : payload;\n  const values = {};\n  for (const v of Array.isArray(p && p.vals) ? p.vals : []) if (v && v.id !== undefined) values[String(v.id)] = v.val;\n  return values;\n}\n\nmodule.exports = {\n  VERSION, CONFIG, configure, GEOMETRY, MM, KN_PER_BAR, DI, DO, AI, AO, RECIPE, NOMINAL, FAULTS, ANOMALIES, ANOMALY, STEPS, PHASES, ALARMS, PLC_STATES, WHERE, CURE_STEPS,\n  createState, advance, applyWrites, parseWrite, snapshot, messages, metadata, catalog, topics, hashVersion, startAnomaly, endAnomaly, effects, cureIndex, setRandom,\n  chunks: chunks.map(({ name, group, entries }) => ({ name, group, ids: entries.map((tag) => tag.id), external: entries.every((tag) => tag.external), writable: entries.some((tag) => tag.write) })),\n  publishedChunks: publishedChunks.map((chunk) => chunk.name),\n};\n\nreturn module.exports;\n})();\nTirePress.configure({\"connector\":\"tirepress1\",\"connection\":\"factory\",\"publishEveryMs\":500});\nconst PUBLISHED = [\"Press_0\",\"Cycle_0\",\"Anomaly_0\",\"Command_0\"];\nconst ECHOED = [\"AI_0\"];\nconst out = () => new Array(1 + PUBLISHED.length + ECHOED.length).fill(null);\nconst metadataMessage = () => ({ payload: TirePress.metadata() });\nif (msg.topic === \"tcp/metadata\") { const o = out(); o[0] = metadataMessage(); return o; }\nconst now = Date.now();\nlet state = flow.get(\"tcpState\");\nlet fresh = false;\nif (!state || state.version !== TirePress.VERSION) {\n    if (state) node.warn(\"Model version changed from \" + state.version + \" to \" + TirePress.VERSION + \": simulation state reset\");\n    state = TirePress.createState(now);\n    fresh = true;\n}\ntry {\n    TirePress.advance(state, now);\n    if (msg.topic === \"tcp/write\" || msg.topic === \"tcp/command\") {\n        const values = msg.topic === \"tcp/write\" ? TirePress.parseWrite(msg.payload) : msg.payload;\n        const result = TirePress.applyWrites(state, values, now);\n        flow.set(\"tcpState\", state);\n        if (result.errors.length) node.warn(\"Write refused: \" + result.errors.join(\"; \"));\n        node.status({ fill: result.errors.length ? \"yellow\" : \"blue\", shape: \"dot\", text: (\"write \" + (result.applied.join(\", \") || \"refused\")).slice(0, 80) });\n        const o = out();\n        for (const echo of result.echoes) {\n            const index = ECHOED.indexOf(echo.chunk);\n            if (index >= 0) o[1 + PUBLISHED.length + index] = { payload: echo.payload };\n        }\n        return o;\n    }\n    const messages = TirePress.messages(state);\n    flow.set(\"tcpState\", state);\n    const o = out();\n    if (fresh) o[0] = metadataMessage();\n    for (const message of messages) o[1 + PUBLISHED.indexOf(message.chunk)] = { payload: message.payload };\n    const anomaly = state.anomaly.active;\n    const step = TirePress.STEPS[state.plc.step].name;\n    node.status(anomaly\n        ? { fill: \"red\", shape: \"dot\", text: \"anomaly \" + anomaly.kind + \" \" + anomaly.severity + \" · \" + step }\n        : { fill: state.plc.fault || state.plc.hold ? \"yellow\" : \"green\", shape: \"dot\", text: \"cycle \" + state.plc.cycles + \" · \" + step });\n    return o;\n} catch (error) {\n    node.error(error.message, msg);\n    node.status({ fill: \"red\", shape: \"ring\", text: error.message.slice(0, 80) });\n    return null;\n}\n",
+    "outputs": 6,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 560,
+    "y": 300,
+    "wires": [
+      [
+        "7131e28fc0e28c51"
+      ],
+      [
+        "a55a50a6971fc2d4"
+      ],
+      [
+        "9b13e0537a35dec3"
+      ],
+      [
+        "6bfb7078ca45c54a"
+      ],
+      [
+        "461e23d4d0a5d634"
+      ],
+      [
+        "d455e0d7dbe12d37"
+      ]
+    ]
+  }
+]

@@ -3,9 +3,12 @@
     <div>
       <p class="tp-kicker">Simulated cell · PLC in the loop</p>
       <h1>Tire curing press</h1>
-      <p class="tp-lede">A green tire goes in soft and comes out vulcanised. A small PLC program runs the whole cycle below: it reads limit switches and transmitters, switches valves and cylinders, and never moves on until the machine reports that the last move is done. Everything you see is one model, so the drawing, the lamps and the logged data always agree.</p>
+      <p class="tp-lede">A green tire goes in soft and comes out vulcanised. A small PLC program runs the whole cycle below: it reads limit switches and transmitters, switches valves and cylinders, and never moves on until the machine reports that the last move is done. <span data-source-note></span></p>
     </div>
-    <button class="tp-btn" data-act="theme" type="button">Dark</button>
+    <div class="tp-head-side">
+      <span class="tp-link" data-link data-level="warn"><i aria-hidden="true"></i><span>Connecting</span></span>
+      <button class="tp-btn" data-act="theme" type="button">Dark</button>
+    </div>
   </header>
 
   <section class="tp-main">
@@ -19,6 +22,21 @@
         <div class="tp-card-head"><span>Anatomy</span><span data-part-name>13 assemblies · hover or pick one</span></div>
         <div class="tp-parts" data-parts></div>
         <p class="tp-part-note" data-part-note>Pick an assembly to light it in the drawing and read what it does.</p>
+      </div>
+      <div class="tp-card">
+        <div class="tp-card-head"><span>Anomalies · ground truth</span><span data-anomaly-count>–</span></div>
+        <div class="tp-anomaly">
+          <div>
+            <div class="tp-truth" data-truth data-active="false"><b>No data yet</b></div>
+            <div class="tp-ai" data-ai></div>
+            <p class="tp-fine">The <code>Anomaly_0</code> tags say what was injected and when. Keep them out of detector inputs and score detections against them.</p>
+          </div>
+          <div>
+            <label class="tp-fault tp-random"><input type="checkbox" data-anomaly-random><span><b>Inject random anomalies</b><small>One at a time, two to seven minutes each, a random type and severity.</small></span></label>
+            <div class="tp-field"><span>Mean gap between anomalies</span><div class="tp-seg" data-seg="gap"><button type="button" data-v="2">2 min</button><button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="30">30</button><button type="button" data-v="60">60</button></div></div>
+            <div class="tp-field"><span>Inject one now</span><div class="tp-inject"><select data-anomaly-pick aria-label="Anomaly type"></select><button class="tp-btn" data-act="inject" type="button">Inject</button><button class="tp-btn" data-act="clear-anomaly" type="button">End</button></div><small class="tp-pick-note" data-anomaly-text></small></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -35,9 +53,10 @@
           <button class="tp-btn" data-act="reset" type="button">Reset</button>
           <button class="tp-btn tp-danger" data-act="estop" type="button" aria-pressed="false">E-stop</button>
         </div>
-        <div class="tp-field"><span>Mode</span><div class="tp-seg" data-seg="mode"><button type="button" data-v="auto">Auto</button><button type="button" data-v="single">Single cycle</button></div></div>
+        <div class="tp-field"><span>Mode</span><div class="tp-seg" data-seg="mode"><button type="button" data-v="0">Auto</button><button type="button" data-v="1">Single cycle</button></div></div>
         <div class="tp-field"><span>Cure clock</span><div class="tp-seg" data-seg="warp"><button type="button" data-v="1">1×</button><button type="button" data-v="10">10×</button><button type="button" data-v="30">30×</button><button type="button" data-v="60">60×</button></div></div>
-        <p class="tp-fine">Moves run in real time. Only the cure steps are fast-forwarded; the log keeps process time.</p>
+        <p class="tp-fine">Moves run in real time. Only the cure steps are fast-forwarded; the log keeps process time. Buttons write command tags; the simulation reads them on its next scan.</p>
+        <p class="tp-fine tp-write-note" data-write-note role="status" hidden></p>
       </div>
 
       <div class="tp-card">
@@ -86,13 +105,13 @@
     </div>
     <div class="tp-card">
       <div class="tp-card-head"><span>Cycle records</span><span data-cycle-count>0 tires</span></div>
-      <div class="tp-table-wrap"><table class="tp-cycles"><thead><tr><th>#</th><th>Serial</th><th>Cycle</th><th>P max</th><th>Platen</th><th>Cure</th><th>Result</th></tr></thead><tbody data-cycles><tr><td colspan="7" class="tp-empty">The first record appears when a tire reaches the conveyor.</td></tr></tbody></table></div>
+      <div class="tp-table-wrap"><table class="tp-cycles"><thead><tr><th>#</th><th>Serial</th><th>Cycle</th><th>P max</th><th>Platen</th><th>Cure</th><th>Result</th><th>Anomaly</th></tr></thead><tbody data-cycles><tr><td colspan="8" class="tp-empty">The first record appears when a tire reaches the conveyor.</td></tr></tbody></table></div>
     </div>
   </section>
 
   <section class="tp-card tp-explain">
     <div class="tp-card-head"><span>How the cycle works</span><span>six phases</span></div>
     <div class="tp-phases" data-phases></div>
-    <p class="tp-fine">This is a teaching model, not a vendor's machine: pressures, temperatures, forces and times are representative of a passenger-tire press with steam and nitrogen cure, and the dynamics are first-order approximations with sensor noise. One drawing unit is about 9 mm.</p>
+    <p class="tp-fine">This is a teaching model, not a vendor's machine: pressures, temperatures, forces and times are representative of a passenger-tire press with steam and nitrogen cure, and the dynamics are first-order approximations with sensor noise. Injected anomalies act on the plant or a sensor inside the model, never on a published value, so their signatures travel through the PLC the way real ones would. Shaded bands in the charts mark when one was active. One drawing unit is about 9 mm.</p>
   </section>
 </div>

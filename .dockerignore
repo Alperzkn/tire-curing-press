@@ -1,3 +1,5 @@
 *
-!nginx.conf
-!tire-curing-press.html
+!package.json
+!package-lock.json
+!server/
+!public/
